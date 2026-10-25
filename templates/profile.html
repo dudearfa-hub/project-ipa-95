@@ -1,0 +1,371 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Founder Profile | MAMORA</title>
+  <style>
+    :root {
+      --navy: #14213d;
+      --blue: #5478f5;
+      --mint: #72d9b9;
+      --muted: #7e8aa2;
+      --line: #e8edf5;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Inter, "Segoe UI", Arial, sans-serif;
+      color: var(--navy);
+      background: #f5f7fc;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    .topbar {
+      height: 76px;
+      padding: 0 clamp(20px, 6vw, 80px);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #fff;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      font-weight: 900;
+      letter-spacing: 2px;
+    }
+
+    .brand-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 13px;
+      display: grid;
+      place-items: center;
+      background: var(--navy);
+      color: var(--mint);
+      font-size: 22px;
+    }
+
+    .top-actions { display: flex; gap: 10px; align-items: center; }
+
+    .btn {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      padding: 11px 16px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: #fff;
+      color: var(--navy);
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .btn.primary {
+      border-color: var(--blue);
+      background: var(--blue);
+      color: white;
+    }
+
+    .hero {
+      padding: 56px 22px 74px;
+      background:
+        radial-gradient(circle at 85% 15%, rgba(114,217,185,.23), transparent 25%),
+        linear-gradient(140deg, #152441, #233b66);
+      color: white;
+    }
+
+    .hero-inner {
+      width: min(100%, 1040px);
+      margin: auto;
+      display: grid;
+      grid-template-columns: .9fr 1.1fr;
+      align-items: center;
+      gap: clamp(30px, 6vw, 76px);
+    }
+
+    .portrait-frame {
+      position: relative;
+      max-width: 410px;
+      width: 100%;
+      margin: auto;
+      padding: 10px;
+      border-radius: 28px;
+      border: 1px solid rgba(255,255,255,.25);
+      background: rgba(255,255,255,.08);
+      box-shadow: 0 25px 60px rgba(0,0,0,.2);
+    }
+
+    .portrait {
+      display: block;
+      width: 100%;
+      height: 460px;
+      object-fit: cover;
+      object-position: center;
+      border-radius: 20px;
+      background: linear-gradient(145deg, #dfe8f8, #c4d6d4);
+    }
+
+    .photo-label {
+      position: absolute;
+      left: 22px;
+      right: 22px;
+      bottom: 22px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      color: white;
+      background: rgba(16,27,53,.82);
+      backdrop-filter: blur(12px);
+    }
+
+    .photo-label small {
+      display: block;
+      color: var(--mint);
+      margin-bottom: 5px;
+      font-size: 10px;
+      letter-spacing: 2px;
+      font-weight: 800;
+    }
+
+    .photo-label strong { font-size: 16px; }
+
+    .eyebrow {
+      color: var(--mint);
+      font-size: 11px;
+      letter-spacing: 2.5px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 18px 0;
+      font-size: clamp(38px, 5vw, 58px);
+      line-height: 1.06;
+      letter-spacing: -2px;
+    }
+
+    .hero-copy {
+      max-width: 500px;
+      color: #d3deef;
+      line-height: 1.9;
+      font-size: 15px;
+    }
+
+    .tag {
+      display: inline-block;
+      margin-top: 14px;
+      padding: 9px 12px;
+      border: 1px solid rgba(255,255,255,.2);
+      border-radius: 99px;
+      color: #e4f6ef;
+      font-size: 12px;
+    }
+
+    .content {
+      width: min(100% - 40px, 1040px);
+      margin: -30px auto 70px;
+      position: relative;
+    }
+
+    .section-heading { margin: 0 0 20px; font-size: 25px; letter-spacing: -.7px; }
+
+    .story-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .card {
+      padding: 28px;
+      border: 1px solid #e9edf5;
+      border-radius: 20px;
+      background: white;
+      box-shadow: 0 12px 35px rgba(31,48,83,.045);
+    }
+
+    .card-icon {
+      width: 45px;
+      height: 45px;
+      display: grid;
+      place-items: center;
+      border-radius: 14px;
+      background: #edf2ff;
+      color: var(--blue);
+      font-size: 21px;
+      margin-bottom: 18px;
+    }
+
+    .card h2 { margin: 0 0 12px; font-size: 19px; }
+    .card p { margin: 0; color: var(--muted); line-height: 1.85; font-size: 14px; }
+
+    .mission {
+      margin-top: 20px;
+      padding: 30px;
+      border-radius: 20px;
+      background: linear-gradient(110deg, #eafbf5, #f0f4ff);
+      border: 1px solid #e0f0eb;
+    }
+
+    .mission h2 { margin: 0 0 12px; font-size: 21px; }
+    .mission p { margin: 0; color: #53627b; line-height: 1.9; font-size: 14px; }
+
+    .values {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .value {
+      padding: 16px;
+      border: 1px solid rgba(84,120,245,.12);
+      border-radius: 14px;
+      background: rgba(255,255,255,.75);
+    }
+
+    .value strong { display: block; margin-bottom: 6px; font-size: 13px; }
+    .value span { color: var(--muted); font-size: 12px; line-height: 1.6; }
+
+    footer {
+      padding: 24px;
+      text-align: center;
+      border-top: 1px solid var(--line);
+      color: #8792a7;
+      background: white;
+      font-size: 12px;
+    }
+
+    @media (max-width: 720px) {
+      .topbar { height: 66px; padding: 0 16px; }
+      .top-actions .logout-text { display: none; }
+      .hero { padding: 34px 20px 58px; }
+      .hero-inner { grid-template-columns: 1fr; gap: 35px; }
+      .portrait-frame { max-width: 340px; }
+      .portrait { height: 360px; }
+      .hero-copy { font-size: 14px; }
+      .content { width: calc(100% - 28px); margin-top: -20px; }
+      .story-grid { grid-template-columns: 1fr; }
+      .card { padding: 23px; }
+      .mission { padding: 23px; }
+      .values { grid-template-columns: 1fr; }
+      h1 { font-size: 42px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="{{ url_for('home') }}">
+      <span class="brand-icon">✳</span>
+      <span>MAMORA</span>
+    </a>
+
+    <div class="top-actions">
+      <a class="btn" href="{{ url_for('home') }}">← <span class="logout-text">&nbsp;Dashboard</span></a>
+      <form method="POST" action="{{ url_for('logout') }}">
+        <button class="btn primary" type="submit">Keluar</button>
+      </form>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="hero-inner">
+      <div class="portrait-frame">
+        <img
+          class="portrait"
+          src="{{ url_for('static', filename='images/owner.jpeg') }}"
+          alt="Foto pemilik MAMORA"
+          onerror="this.style.display='none';document.getElementById('photoFallback').style.display='grid';"
+        >
+        <div id="photoFallback"
+             style="display:none;height:360px;place-items:center;border-radius:20px;background:#dce7f5;color:#20365b;font-size:70px;">
+          ✳
+        </div>
+        <div class="photo-label">
+          <small>FOUNDER & PROJECT CREATOR</small>
+          <strong>{{ owner_name }}</strong>
+        </div>
+      </div>
+
+      <div>
+        <div class="eyebrow">Behind the project</div>
+        <h1>Berawal dari rasa ingin tahu.</h1>
+        <p class="hero-copy">
+          MAMORA dikembangkan sebagai proyek pembelajaran untuk membantu
+          penggunanya mencatat nafsu makan dan memperhatikan perubahan
+          kebiasaan sehari-hari dengan cara yang sederhana dan terstruktur.
+        </p>
+        <span class="tag">✦ Personal project · Educational wellness</span>
+      </div>
+    </div>
+  </section>
+
+  <main class="content">
+    <h2 class="section-heading">Cerita di balik MAMORA</h2>
+
+    <div class="story-grid">
+      <article class="card">
+        <div class="card-icon">⌕</div>
+        <h2>Awal mula ide</h2>
+        <p>
+          MAMORA berawal dari ketertarikan untuk memahami masalah nafsu
+          makan yang dapat berubah dari hari ke hari. Catatan sederhana
+          bisa membantu seseorang mengamati pola makan, suasana hati,
+          dan keluhan yang dirasakan, alih-alih hanya mengandalkan ingatan.
+        </p>
+      </article>
+
+      <article class="card">
+        <div class="card-icon">⌘</div>
+        <h2>Proses pembuatan</h2>
+        <p>
+          Aplikasi ini dibuat menggunakan Flask sebagai kerangka kerja
+          web, HTML dan CSS untuk antarmuka, serta JavaScript untuk
+          interaksi dan visualisasi. Penyimpanan check-in di versi demo
+          dilakukan secara lokal pada browser.
+        </p>
+      </article>
+    </div>
+
+    <section class="mission">
+      <h2>Tujuan proyek</h2>
+      <p>
+        Tujuan MAMORA adalah menyediakan media pencatatan yang mudah
+        digunakan untuk mengamati kebiasaan makan dan perubahan yang
+        dirasakan dari waktu ke waktu. Proyek ini juga menjadi sarana
+        belajar tentang pengembangan aplikasi, pengolahan data sederhana,
+        dan hubungan antara teknologi dengan kesehatan sehari-hari.
+        MAMORA bukan alat diagnosis dan tidak menggantikan saran tenaga
+        kesehatan.
+      </p>
+
+      <div class="values">
+        <div class="value">
+          <strong>01 · Pencatatan</strong>
+          <span>Membantu pengguna merekam check-in harian.</span>
+        </div>
+        <div class="value">
+          <strong>02 · Refleksi</strong>
+          <span>Menampilkan pola data agar lebih mudah diamati.</span>
+        </div>
+        <div class="value">
+          <strong>03 · Edukasi</strong>
+          <span>Mendorong pemahaman diri dan kebiasaan yang sehat.</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    MAMORA · Dibuat untuk pembelajaran, eksplorasi, dan pengembangan ide.
+  </footer>
+</body>
+</html>

@@ -1,0 +1,564 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101b2d">
+  <title>Analisis Pola | MAMORA</title>
+  <style>
+    :root {
+      --navy: #101b2d;
+      --panel: #17253a;
+      --panel2: #1d3048;
+      --mint: #8ce3bd;
+      --text: #f2f7fb;
+      --muted: #a7b7c9;
+      --line: rgba(255,255,255,.1);
+      --yellow: #f4d58a;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: #0c1524;
+      color: var(--text);
+      font-family: Inter, system-ui, -apple-system, sans-serif;
+    }
+    a { color: inherit; text-decoration: none; }
+    button, select { font: inherit; }
+    .layout { max-width: 1200px; margin: auto; padding: 24px; }
+    header {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 16px; flex-wrap: wrap; margin-bottom: 32px;
+    }
+    .brand { display: flex; align-items: center; gap: 12px; }
+    .logo {
+      display: grid; place-items: center; width: 44px; height: 44px;
+      border-radius: 15px; background: var(--mint); color: var(--navy);
+      font-weight: 900; font-size: 20px;
+    }
+    .brand strong { display: block; letter-spacing: 1px; }
+    .brand small, .muted { color: var(--muted); }
+    nav { display: flex; gap: 10px; flex-wrap: wrap; }
+    nav a, .button {
+      border: 1px solid var(--line); padding: 10px 14px;
+      border-radius: 12px; color: var(--text); background: transparent;
+    }
+    nav a.active, .button.primary {
+      background: var(--mint); color: var(--navy);
+      border-color: var(--mint); font-weight: 750;
+    }
+    h1 { font-size: clamp(28px, 5vw, 42px); margin: 10px 0; }
+    h2 { font-size: 18px; margin: 0 0 8px; }
+    p { line-height: 1.65; }
+    .eyebrow {
+      color: var(--mint); font-size: 11px; font-weight: 800;
+      letter-spacing: 1.5px; text-transform: uppercase;
+    }
+    .intro { max-width: 760px; margin-bottom: 24px; }
+    .notice {
+      border: 1px solid rgba(244,213,138,.3);
+      background: rgba(244,213,138,.08); color: #f5e5bd;
+      border-radius: 14px; padding: 14px 16px; margin: 20px 0;
+      line-height: 1.6;
+    }
+    .grid {
+      display: grid; grid-template-columns: repeat(12, minmax(0, 1fr));
+      gap: 16px;
+    }
+    .card {
+      background: var(--panel); border: 1px solid var(--line);
+      border-radius: 20px; padding: 20px; min-width: 0;
+    }
+    .metric { grid-column: span 3; }
+    .wide { grid-column: span 8; }
+    .side { grid-column: span 4; }
+    .full { grid-column: span 12; }
+    .metric .value {
+      font-size: 30px; font-weight: 800; margin: 12px 0 4px;
+      letter-spacing: -.8px;
+    }
+    .metric .label { color: var(--muted); font-size: 13px; }
+    .chart-wrap { width: 100%; overflow: hidden; }
+    #trendChart { width: 100%; display: block; min-height: 190px; }
+    .axis-label { fill: var(--muted); font-size: 11px; }
+    .empty {
+      color: var(--muted); padding: 20px 0; line-height: 1.7;
+    }
+    .pattern {
+      background: var(--panel2); padding: 14px; border-radius: 14px;
+      margin-top: 10px; line-height: 1.6;
+    }
+    .pattern strong { color: var(--mint); }
+    .bar-row {
+      display: grid; grid-template-columns: minmax(90px, 1fr) 2fr auto;
+      align-items: center; gap: 10px; margin: 15px 0; font-size: 13px;
+    }
+    .bar {
+      height: 9px; border-radius: 20px; background: #31445b; overflow: hidden;
+    }
+    .bar span { display: block; height: 100%; background: var(--mint); }
+    .filters { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px; }
+    select {
+      color: var(--text); background: var(--panel2);
+      border: 1px solid var(--line); border-radius: 12px; padding: 11px;
+    }
+    .button { cursor: pointer; }
+    .button:hover, nav a:hover { filter: brightness(1.08); }
+    .footnote { color: var(--muted); font-size: 12px; line-height: 1.7; }
+    .list { padding-left: 20px; line-height: 1.8; color: var(--muted); }
+    .list strong { color: var(--text); }
+    .empty-state { text-align: center; padding: 28px 12px; }
+    .empty-state .emoji { font-size: 35px; }
+    @media (max-width: 800px) {
+      .metric { grid-column: span 6; }
+      .wide, .side { grid-column: span 12; }
+      .layout { padding: 17px; }
+    }
+    @media (max-width: 460px) {
+      .metric { grid-column: span 12; }
+      .card { padding: 16px; }
+      nav { width: 100%; }
+      nav a { flex: 1; text-align: center; font-size: 13px; }
+      .bar-row { grid-template-columns: 85px 1fr auto; gap: 7px; }
+    }
+  </style>
+</head>
+<body>
+<div class="layout">
+  <header>
+    <a class="brand" href="{{ url_for('home') }}">
+      <span class="logo">M</span>
+      <span>
+        <strong>MAMORA</strong>
+        <small>Mindful appetite journal</small>
+      </span>
+    </a>
+    <nav aria-label="Navigasi utama">
+      <a href="{{ url_for('home') }}">Beranda</a>
+      <a class="active" href="{{ url_for('analysis') }}">Analisis</a>
+      <a href="{{ url_for('profile') }}">Profil</a>
+    </nav>
+  </header>
+
+  <section class="intro">
+    <span class="eyebrow">PERSONAL INSIGHTS</span>
+    <h1>Kenali pola, bukan menebak penyebab.</h1>
+    <p class="muted">
+      Ringkasan berdasarkan check-in yang kamu simpan. Hasil berubah
+      mengikuti data dan bukan merupakan penilaian medis.
+    </p>
+    <div class="filters">
+      <label>
+        <span class="muted">Periode </span>
+        <select id="period">
+          <option value="7">7 hari terakhir</option>
+          <option value="14">14 hari terakhir</option>
+          <option value="30" selected>30 hari terakhir</option>
+          <option value="all">Semua catatan</option>
+        </select>
+      </label>
+      <button class="button" id="refreshBtn" type="button">Perbarui analisis</button>
+    </div>
+  </section>
+
+  <div class="notice" id="dataNotice" role="status">
+    Analisis sedang membaca catatan dari browser ini.
+  </div>
+
+  <section class="grid" aria-label="Ringkasan data">
+    <article class="card metric">
+      <span class="label">Jumlah check-in</span>
+      <div class="value" id="totalCount">—</div>
+      <div class="label">Dalam periode terpilih</div>
+    </article>
+    <article class="card metric">
+      <span class="label">Rata-rata skor</span>
+      <div class="value" id="averageScore">—</div>
+      <div class="label">Skala subjektif 1–5</div>
+    </article>
+    <article class="card metric">
+      <span class="label">Hari tercatat</span>
+      <div class="value" id="daysCount">—</div>
+      <div class="label">Hari berbeda dengan catatan</div>
+    </article>
+    <article class="card metric">
+      <span class="label">Data lengkap</span>
+      <div class="value" id="completeRate">—</div>
+      <div class="label">Skor dan tanggal tersedia</div>
+    </article>
+
+    <article class="card wide">
+      <span class="eyebrow">TREND</span>
+      <h2 style="margin-top:8px">Perubahan skor harian</h2>
+      <p class="muted">Setiap titik adalah rata-rata skor pada tanggal tersebut.</p>
+      <div class="chart-wrap">
+        <svg id="trendChart" viewBox="0 0 640 230" role="img"
+             aria-label="Grafik tren skor nafsu makan harian"></svg>
+      </div>
+      <p class="footnote">
+        Skor yang lebih tinggi berarti pengguna memilih angka lebih tinggi
+        pada skala check-in. Ini bukan ukuran status kesehatan.
+      </p>
+    </article>
+
+    <article class="card side">
+      <span class="eyebrow">OBSERVATIONS</span>
+      <h2 style="margin-top:8px">Ringkasan pola</h2>
+      <div id="patternSummary" class="empty">
+        Belum ada cukup data untuk menyusun ringkasan.
+      </div>
+    </article>
+
+    <article class="card wide">
+      <span class="eyebrow">CONTEXT</span>
+      <h2 style="margin-top:8px">Skor berdasarkan suasana hati</h2>
+      <p class="muted">
+        Perbandingan deskriptif. Suasana hati yang tercatat tidak membuktikan
+        penyebab perubahan skor.
+      </p>
+      <div id="moodComparison"></div>
+    </article>
+
+    <article class="card side">
+      <span class="eyebrow">CHECK-IN NOTES</span>
+      <h2 style="margin-top:8px">Gejala yang dicatat</h2>
+      <div id="symptomSummary"></div>
+    </article>
+
+    <article class="card full">
+      <span class="eyebrow">HOW TO READ THIS</span>
+      <h2 style="margin-top:8px">Cara membaca hasil MAMORA</h2>
+      <ul class="list">
+        <li><strong>Temuan:</strong> ringkasan angka yang berasal dari catatanmu.</li>
+        <li><strong>Pola awal:</strong> kecenderungan yang terlihat pada data terbatas dan perlu diamati lagi.</li>
+        <li><strong>Bukan sebab-akibat:</strong> dua hal yang muncul bersamaan belum tentu saling menyebabkan.</li>
+        <li><strong>Data tidak lengkap:</strong> catatan yang kosong tidak boleh dianggap sebagai skor nol.</li>
+      </ul>
+      <p class="footnote">
+        Jika nafsu makan rendah terus berlangsung, sering berulang, disertai
+        penurunan berat badan tanpa disengaja, atau kamu merasa sangat lemas,
+        bicarakan dengan orang tua/wali dan tenaga kesehatan. MAMORA tidak
+        menggantikan penilaian profesional.
+      </p>
+    </article>
+  </section>
+</div>
+
+<script>
+(() => {
+  "use strict";
+
+  const STORAGE_KEYS = [
+    "mamora_checkins_v3",
+    "mamora_checkins_v2",
+    "mamora_checkins"
+  ];
+
+  const $ = id => document.getElementById(id);
+
+  function readRecords() {
+    for (const key of STORAGE_KEYS) {
+      try {
+        const raw = localStorage.getItem(key);
+        if (!raw) continue;
+        const parsed = JSON.parse(raw);
+
+        if (Array.isArray(parsed)) return parsed;
+        if (parsed && Array.isArray(parsed.records)) return parsed.records;
+        if (parsed && Array.isArray(parsed.checkins)) return parsed.checkins;
+      } catch (error) {
+        console.warn("Tidak dapat membaca data dari", key, error);
+      }
+    }
+    return [];
+  }
+
+  function getDate(record) {
+    const raw = record.date || record.day || record.createdAt ||
+                record.created_at || record.timestamp;
+    if (!raw) return null;
+
+    const date = new Date(raw);
+    if (Number.isNaN(date.getTime())) return null;
+
+    return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+  }
+
+  function getAppetite(record) {
+    const raw = record.appetite ?? record.appetiteScore ??
+                record.appetite_score ?? record.score;
+
+    if (raw === null || raw === undefined || raw === "") return null;
+
+    const score = Number(raw);
+    if (!Number.isFinite(score) || score < 1 || score > 5) return null;
+    return score;
+  }
+
+  function getMood(record) {
+    const value = record.mood ?? record.feeling ?? record.emotion;
+    if (value === null || value === undefined || value === "") return "Tidak dicatat";
+    return String(value).trim();
+  }
+
+  function getSymptoms(record) {
+    const raw = record.symptoms ?? record.symptom ?? [];
+    if (Array.isArray(raw)) {
+      return raw.map(item => String(item).trim()).filter(Boolean)
+        .filter(item => !["tidak_ada", "tidak ada", "none"].includes(item.toLowerCase()));
+    }
+    if (typeof raw === "string" &&
+        !["", "tidak_ada", "tidak ada", "none"].includes(raw.toLowerCase())) {
+      return [raw.trim()];
+    }
+    return [];
+  }
+
+  function startOfToday() {
+    const now = new Date();
+    return new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  }
+
+  function formatDate(date) {
+    return new Intl.DateTimeFormat("id-ID", {
+      day: "numeric", month: "short"
+    }).format(date);
+  }
+
+  function mean(values) {
+    return values.length
+      ? values.reduce((sum, value) => sum + value, 0) / values.length
+      : null;
+  }
+
+  function averageText(value) {
+    return value === null ? "—" : value.toLocaleString("id-ID", {
+      minimumFractionDigits: 1, maximumFractionDigits: 2
+    });
+  }
+
+  function renderChart(daily) {
+    const svg = $("trendChart");
+    const width = 640, height = 230;
+    const pad = { left: 42, right: 18, top: 18, bottom: 38 };
+    const plotW = width - pad.left - pad.right;
+    const plotH = height - pad.top - pad.bottom;
+
+    if (!daily.length) {
+      svg.innerHTML =
+        '<text x="320" y="110" text-anchor="middle" class="axis-label">' +
+        'Belum ada data yang dapat digrafikkan</text>';
+      return;
+    }
+
+    const x = i => pad.left +
+      (daily.length === 1 ? plotW / 2 : i * plotW / (daily.length - 1));
+    const y = value => pad.top + (5 - value) / 4 * plotH;
+
+    let markup = "";
+    [1, 2, 3, 4, 5].forEach(value => {
+      const yy = y(value);
+      markup += `<line x1="${pad.left}" y1="${yy}" x2="${width-pad.right}" y2="${yy}" stroke="#30435b" stroke-width="1"/>`;
+      markup += `<text x="${pad.left-12}" y="${yy+4}" text-anchor="end" class="axis-label">${value}</text>`;
+    });
+
+    const points = daily.map((item, i) => `${x(i)},${y(item.average)}`).join(" ");
+    if (daily.length > 1) {
+      markup += `<polyline points="${points}" fill="none" stroke="#8ce3bd" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>`;
+    }
+
+    daily.forEach((item, i) => {
+      markup += `<circle cx="${x(i)}" cy="${y(item.average)}" r="4.5" fill="#8ce3bd"><title>${formatDate(item.date)}: ${averageText(item.average)}</title></circle>`;
+    });
+
+    const labelCount = Math.min(5, daily.length);
+    const indexes = new Set();
+    for (let i = 0; i < labelCount; i++) {
+      indexes.add(labelCount === 1 ? 0 :
+        Math.round(i * (daily.length - 1) / (labelCount - 1)));
+    }
+    [...indexes].forEach(i => {
+      markup += `<text x="${x(i)}" y="${height-12}" text-anchor="middle" class="axis-label">${formatDate(daily[i].date)}</text>`;
+    });
+
+    svg.innerHTML = markup;
+  }
+
+  function renderMoodComparison(records) {
+    const groups = new Map();
+
+    records.forEach(record => {
+      const score = getAppetite(record);
+      if (score === null) return;
+      const mood = getMood(record);
+      if (mood === "Tidak dicatat") return;
+      if (!groups.has(mood)) groups.set(mood, []);
+      groups.get(mood).push(score);
+    });
+
+    const entries = [...groups.entries()]
+      .map(([mood, scores]) => ({ mood, scores, average: mean(scores) }))
+      .sort((a, b) => b.scores.length - a.scores.length)
+      .slice(0, 8);
+
+    if (!entries.length) {
+      $("moodComparison").innerHTML =
+        '<p class="empty">Belum ada kombinasi skor dan suasana hati yang dapat dibandingkan.</p>';
+      return;
+    }
+
+    $("moodComparison").innerHTML = entries.map(item => {
+      const width = Math.max(0, Math.min(100, item.average / 5 * 100));
+      return `<div class="bar-row">
+        <span>${escapeHtml(item.mood)}</span>
+        <div class="bar"><span style="width:${width}%"></span></div>
+        <strong>${averageText(item.average)} <small class="muted">(${item.scores.length})</small></strong>
+      </div>`;
+    }).join("") +
+      '<p class="footnote">Angka dalam kurung adalah jumlah catatan yang dapat dibandingkan. Kelompok dengan catatan sedikit mudah berubah dan tidak layak ditafsirkan terlalu jauh.</p>';
+  }
+
+  function renderSymptoms(records) {
+    const counts = new Map();
+
+    records.forEach(record => {
+      getSymptoms(record).forEach(symptom => {
+        counts.set(symptom, (counts.get(symptom) || 0) + 1);
+      });
+    });
+
+    const entries = [...counts.entries()]
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 8);
+
+    if (!entries.length) {
+      $("symptomSummary").innerHTML =
+        '<p class="empty">Tidak ada gejala yang tercatat pada periode ini, atau bagian ini belum diisi.</p>';
+      return;
+    }
+
+    $("symptomSummary").innerHTML = entries.map(([symptom, count]) =>
+      `<div class="pattern"><strong>${escapeHtml(symptom)}</strong><br>
+      <span class="muted">Muncul pada ${count} catatan</span></div>`
+    ).join("") +
+      '<p class="footnote">Jumlah catatan bukan ukuran tingkat keparahan gejala.</p>';
+  }
+
+  function renderPatterns(records, daily) {
+    const target = $("patternSummary");
+    const validScores = records.map(getAppetite).filter(score => score !== null);
+
+    if (validScores.length < 3) {
+      target.innerHTML =
+        '<div class="empty">Dibutuhkan sedikitnya 3 catatan dengan skor valid untuk mulai menampilkan ringkasan sederhana. Ini batas tampilan aplikasi, bukan standar medis.</div>';
+      return;
+    }
+
+    const low = validScores.filter(score => score <= 2).length;
+    const middle = validScores.filter(score => score === 3).length;
+    const high = validScores.filter(score => score >= 4).length;
+    const average = mean(validScores);
+
+    let trendMessage = "Data harian belum cukup untuk membandingkan awal dan akhir periode.";
+    if (daily.length >= 4) {
+      const split = Math.floor(daily.length / 2);
+      const first = mean(daily.slice(0, split).map(item => item.average));
+      const last = mean(daily.slice(split).map(item => item.average));
+      const difference = last - first;
+
+      if (Math.abs(difference) < 0.35) {
+        trendMessage = "Rata-rata dua bagian periode terlihat relatif serupa pada catatan yang tersedia.";
+      } else if (difference > 0) {
+        trendMessage = `Rata-rata skor pada bagian akhir lebih tinggi sekitar ${averageText(difference)} poin dibanding bagian awal.`;
+      } else {
+        trendMessage = `Rata-rata skor pada bagian akhir lebih rendah sekitar ${averageText(Math.abs(difference))} poin dibanding bagian awal.`;
+      }
+    }
+
+    target.innerHTML = `
+      <div class="pattern"><strong>Ringkasan skor</strong><br>
+        Rata-rata ${averageText(average)} dari ${validScores.length} skor valid.
+      </div>
+      <div class="pattern"><strong>Distribusi catatan</strong><br>
+        Skor 1–2: ${low} catatan<br>
+        Skor 3: ${middle} catatan<br>
+        Skor 4–5: ${high} catatan
+      </div>
+      <div class="pattern"><strong>Perbandingan waktu</strong><br>
+        ${escapeHtml(trendMessage)}
+      </div>
+      <p class="footnote">Kategori ini hanya merangkum pilihan pada skala pribadi 1–5. Tidak menunjukkan penyakit, status gizi, atau penyebab tertentu.</p>
+    `;
+  }
+
+  function escapeHtml(value) {
+    return String(value).replace(/[&<>"']/g, char => ({
+      "&": "&amp;", "<": "&lt;", ">": "&gt;",
+      '"': "&quot;", "'": "&#39;"
+    })[char]);
+  }
+
+  function update() {
+    const all = readRecords();
+    const period = $("period").value;
+    const today = startOfToday();
+    const start = new Date(today);
+    if (period !== "all") start.setDate(start.getDate() - (Number(period) - 1));
+
+    const records = all.filter(record => {
+      const date = getDate(record);
+      if (!date) return false;
+      return period === "all" || (date >= start && date <= today);
+    });
+
+    const valid = records.filter(record =>
+      getDate(record) && getAppetite(record) !== null
+    );
+    const dates = new Set(valid.map(record => getDate(record).getTime()));
+    const average = mean(valid.map(getAppetite));
+    const complete = all.length
+      ? Math.round(valid.length / all.length * 100)
+      : 0;
+
+    $("totalCount").textContent = records.length;
+    $("averageScore").textContent = averageText(average);
+    $("daysCount").textContent = dates.size;
+    $("completeRate").textContent = all.length ? `${complete}%` : "—";
+
+    const dailyMap = new Map();
+    valid.forEach(record => {
+      const date = getDate(record);
+      const key = date.getTime();
+      if (!dailyMap.has(key)) dailyMap.set(key, { date, scores: [] });
+      dailyMap.get(key).scores.push(getAppetite(record));
+    });
+
+    const daily = [...dailyMap.values()]
+      .map(item => ({ date: item.date, average: mean(item.scores) }))
+      .sort((a, b) => a.date - b.date);
+
+    renderChart(daily);
+    renderPatterns(valid, daily);
+    renderMoodComparison(valid);
+    renderSymptoms(records);
+
+    if (!all.length) {
+      $("dataNotice").textContent =
+        "Belum ditemukan catatan pada penyimpanan browser yang dikenali. Buat check-in dari dashboard terlebih dahulu.";
+    } else if (!records.length) {
+      $("dataNotice").textContent =
+        "Ada data tersimpan, tetapi tidak ditemukan catatan bertanggal dalam periode ini. Coba pilih periode yang lebih panjang.";
+    } else {
+      $("dataNotice").textContent =
+        `Menampilkan ${records.length} catatan dalam periode terpilih. Analisis dibuat dari data yang tersedia di browser ini.`;
+    }
+  }
+
+  $("period").addEventListener("change", update);
+  $("refreshBtn").addEventListener("click", update);
+  update();
+})();
+</script>
+</body>
+</html>
