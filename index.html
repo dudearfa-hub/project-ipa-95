@@ -1,0 +1,1255 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#101b32">
+<title>MAMORA — Appetite & Wellness</title>
+<style>
+:root{
+  --navy:#101b32;--blue:#5877f7;--blue2:#edf1ff;
+  --bg:#f5f7fb;--surface:#fff;--ink:#17243b;
+  --muted:#8390a5;--line:#e8edf5;--green:#168568;
+  --mint:#e6f8ef;--amber:#fff4df;--red:#fff0f0;
+  --shadow:0 12px 35px #1d2f540c;--radius:20px
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);
+font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+button:focus-visible,input:focus-visible,select:focus-visible,
+textarea:focus-visible{outline:3px solid #aabaff;outline-offset:2px}
+button:disabled{opacity:.5;cursor:not-allowed}
+.hidden{display:none!important}
+.muted{color:var(--muted)}
+.small{font-size:11px;line-height:1.8}
+.eyebrow{font-size:10px;letter-spacing:1.7px;font-weight:800;color:var(--blue)}
+h1{font-size:clamp(24px,3vw,32px);letter-spacing:-.8px;margin:7px 0}
+h2{letter-spacing:-.6px}
+h3{font-size:15px}
+p{line-height:1.75}
+button:active{transform:scale(.99)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;
+border:0;border-radius:11px;padding:12px 16px;background:var(--blue);
+color:#fff;font-size:12px;font-weight:750;transition:.18s}
+.btn:hover{filter:brightness(.96)}
+.btn.soft{background:var(--blue2);color:#5067dc}
+.btn.outline{background:#fff;border:1px solid var(--line);color:#536078}
+.btn.danger{background:var(--red);color:#bd4949}
+.btn.block{width:100%}
+.btn.small{padding:8px 10px;font-size:10px}
+.card{background:var(--surface);border:1px solid #edf0f6;
+border-radius:var(--radius);box-shadow:var(--shadow);padding:21px;min-width:0}
+.card h3{margin-top:0}
+.field{display:grid;gap:7px;margin-bottom:16px}
+.field label,.field-label{font-size:11px;font-weight:800;color:#4c5970}
+.field input,.field select,.field textarea,.search{
+width:100%;min-width:0;padding:12px;border:1px solid #e4e9f2;
+border-radius:11px;background:#fff;color:var(--ink);font-size:12px}
+.field textarea{resize:vertical;min-height:80px}
+.field-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.form-hint{font-size:11px;color:var(--muted);line-height:1.8}
+.tag{display:inline-flex;padding:6px 10px;border-radius:99px;
+font-size:10px;background:var(--blue2);color:#5067dc;font-weight:750}
+.divider{height:1px;background:var(--line);margin:18px 0}
+.toast{position:fixed;z-index:100;bottom:22px;right:22px;max-width:340px;
+background:#15213a;color:white;padding:13px 17px;border-radius:12px;
+font-size:12px;box-shadow:var(--shadow);display:none}
+.toast.show{display:block}
+
+/* LOGIN */
+.login-screen{min-height:100vh;display:grid;grid-template-columns:1.05fr .95fr;
+background:#fff}
+.login-art{position:relative;overflow:hidden;display:flex;flex-direction:column;
+justify-content:space-between;padding:clamp(28px,5vw,68px);
+background:linear-gradient(145deg,#101b32,#263c76 62%,#5b73e8);color:#fff}
+.login-art:before,.login-art:after{content:"";position:absolute;border:1px solid #ffffff24;
+border-radius:50%;width:300px;height:300px;right:-90px;top:12%;
+box-shadow:0 0 0 30px #ffffff08,0 0 0 65px #ffffff05}
+.login-art:after{width:180px;height:180px;top:auto;bottom:8%;right:15%}
+.login-brand{display:flex;gap:12px;align-items:center;position:relative;z-index:1}
+.brand-mark{display:grid;place-items:center;width:43px;height:43px;
+border-radius:14px;background:linear-gradient(135deg,#91a2ff,#526ef2);font-size:22px}
+.brand-name{font-size:20px;font-weight:850;letter-spacing:1.3px}
+.login-message{position:relative;z-index:1;max-width:520px}
+.login-message h1{font-size:clamp(35px,5vw,58px);line-height:1.08;letter-spacing:-2px}
+.login-message p{max-width:420px;color:#dbe3ff;font-size:13px}
+.login-points{display:grid;gap:13px;margin-top:27px;font-size:12px;color:#e2e8ff}
+.login-point{display:flex;gap:10px;align-items:center}
+.login-foot{position:relative;z-index:1;color:#b9c6e8;font-size:10px;line-height:1.8}
+.login-side{display:grid;place-items:center;padding:30px}
+.login-box{width:min(100%,390px)}
+.login-box h2{font-size:27px;margin:12px 0 7px}
+.login-box .field{margin-top:20px}
+.login-lock{display:grid;place-items:center;width:52px;height:52px;border-radius:17px;
+background:var(--blue2);font-size:24px}
+.login-error{color:#b84747;font-size:11px;margin:0 0 12px}
+.login-owner{display:flex;align-items:center;gap:12px;margin-top:23px;
+padding:13px;border:1px solid var(--line);border-radius:14px}
+.owner-mini{width:44px;height:44px;border-radius:14px;background:#edf1ff;
+display:grid;place-items:center;overflow:hidden;color:#5369dc;font-weight:800}
+.owner-mini img{width:100%;height:100%;object-fit:cover}
+
+/* APP SHELL */
+.sidebar{position:fixed;inset:0 auto 0 0;width:240px;background:var(--navy);
+color:white;padding:25px 17px;display:flex;flex-direction:column;z-index:20}
+.brand{display:flex;align-items:center;gap:11px;padding:0 8px 29px}
+.brand-sub{font-size:9px;color:#a9b7d2;letter-spacing:1.3px;margin-top:3px}
+.nav-label{padding:0 12px;margin:9px 0 12px;color:#8290ad;font-size:10px;
+letter-spacing:1.4px;font-weight:800}
+.nav-list{display:grid;gap:6px}
+.nav-btn{width:100%;display:flex;align-items:center;gap:12px;padding:12px;
+border:0;border-radius:12px;background:transparent;color:#b9c4da;
+text-align:left;font-size:12px}
+.nav-btn:hover{background:#ffffff0d;color:#fff}
+.nav-btn.active{color:#fff;background:linear-gradient(100deg,#627df8,#5068e8);
+box-shadow:0 7px 18px #435dd733}
+.nav-icon{width:22px;text-align:center;font-size:17px}
+.sidebar-bottom{margin-top:auto}
+.privacy{padding:14px;border:1px solid #ffffff18;border-radius:15px;background:#ffffff08}
+.privacy strong{font-size:11px}
+.privacy p{font-size:10px;line-height:1.7;color:#a9b7d2;margin-bottom:0}
+.sidebar-owner{display:flex;align-items:center;gap:9px;padding:12px 7px 18px}
+.sidebar-owner .owner-mini{width:37px;height:37px;flex-shrink:0}
+.sidebar-owner strong{font-size:11px;display:block}
+.sidebar-owner small{font-size:9px;color:#a9b7d2}
+.main{margin-left:240px;padding:28px 32px 50px;max-width:1800px;min-height:100vh}
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:26px}
+.top-sub{font-size:12px;color:var(--muted);margin:5px 0 0}
+.top-actions{display:flex;align-items:center;gap:8px}
+.date-chip{padding:12px;border:1px solid var(--line);border-radius:12px;background:#fff;font-size:11px}
+.avatar{width:40px;height:40px;border-radius:13px;background:#e7ecff;color:#5269db;
+display:grid;place-items:center;font-weight:800;overflow:hidden}
+.avatar img{width:100%;height:100%;object-fit:cover}
+.view{display:none}
+.view.active{display:block;animation:appear .2s ease}
+@keyframes appear{from{opacity:.5;transform:translateY(4px)}to{opacity:1;transform:none}}
+.hero{display:grid;grid-template-columns:1fr 130px;gap:18px;align-items:center;
+padding:29px;border-radius:24px;background:linear-gradient(115deg,#253a72,#536ef2 78%,#7587ff);
+color:#fff;margin-bottom:19px;overflow:hidden}
+.hero h2{font-size:clamp(24px,3vw,33px);line-height:1.2;margin:15px 0 9px}
+.hero p{font-size:12px;color:#e0e6ff;max-width:560px}
+.hero-orb{width:115px;height:115px;border:1px solid #ffffff55;border-radius:50%;
+display:grid;place-items:center;background:#ffffff17;font-size:49px}
+.hero .btn{background:#fff;color:#4158cf;margin-top:8px}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px;margin-bottom:19px}
+.stat{padding:17px;border:1px solid #edf0f6;border-radius:17px;background:#fff;box-shadow:var(--shadow)}
+.stat-head{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:10px;color:var(--muted)}
+.stat-icon{width:32px;height:32px;display:grid;place-items:center;border-radius:10px;background:#eff2ff;font-size:16px}
+.stat-number{font-size:27px;font-weight:850;letter-spacing:-.8px;margin-top:12px}
+.stat-foot{font-size:10px;color:var(--muted);line-height:1.6;margin-top:5px}
+.content-grid{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(240px,1fr);gap:17px;align-items:start}
+.panel{padding:20px;background:#fff;border:1px solid #edf0f6;border-radius:19px;
+box-shadow:var(--shadow);margin-bottom:17px;min-width:0}
+.panel-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:16px}
+.panel-title{font-size:14px;font-weight:800;margin:0}
+.panel-sub{font-size:10px;color:var(--muted);line-height:1.7;margin:6px 0 0}
+.period{display:flex;gap:3px;padding:4px;border-radius:9px;background:#f2f4fa;flex-shrink:0}
+.period button{border:0;background:transparent;padding:7px 9px;border-radius:7px;color:var(--muted);font-size:10px}
+.period button.active{background:#fff;color:#435bd3;box-shadow:0 2px 5px #0000000b}
+.chart{width:100%;height:auto;display:block;overflow:visible}
+.chart-note{margin-top:12px;padding:11px;border-radius:11px;background:#f7f8ff;
+color:#697694;font-size:10px;line-height:1.8}
+.quick-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.quick{padding:13px;border:1px solid var(--line);border-radius:13px;background:#fff;text-align:left}
+.quick:hover{background:#fafbff;border-color:#c5d0ff}
+.quick span{font-size:21px;display:block;margin-bottom:9px}
+.quick strong{font-size:11px;display:block}
+.quick small{font-size:9px;color:var(--muted);display:block;margin-top:4px}
+.feedback{padding:14px;border-radius:13px;background:#f0fbf5;border:1px solid #dcece6}
+.feedback.warning{background:#fff8e9;border-color:#f3e3b9}
+.feedback strong{font-size:11px}
+.feedback p{font-size:10px;color:#687b79;line-height:1.8;margin:8px 0 0}
+.section-heading{display:flex;justify-content:space-between;align-items:flex-end;gap:14px;margin-bottom:19px}
+.section-heading h2{font-size:24px;margin:6px 0}
+.section-heading p{font-size:11px;color:var(--muted);margin:0;line-height:1.7}
+.form-layout{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(240px,.8fr);gap:17px;align-items:start}
+.form-card{padding:22px;border:1px solid #edf0f6;border-radius:19px;background:#fff;box-shadow:var(--shadow)}
+.scale{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px}
+.scale label input{position:absolute;opacity:0}
+.scale label span{display:grid;place-items:center;gap:6px;min-height:70px;
+border:1px solid var(--line);border-radius:12px;font-size:21px}
+.scale label input:checked+span{border-color:var(--blue);background:var(--blue2)}
+.scale small{font-size:8px;color:var(--muted)}
+.entry-list{display:grid;gap:10px}
+.entry{display:flex;align-items:flex-start;gap:11px;padding:13px;border:1px solid var(--line);
+border-radius:13px;background:#fff}
+.entry-emoji{width:38px;height:38px;flex-shrink:0;display:grid;place-items:center;
+background:#f0f3ff;border-radius:12px;font-size:19px}
+.entry-body{flex:1;min-width:0}
+.entry-title{font-size:11px;font-weight:800;overflow-wrap:anywhere}
+.entry-meta{font-size:10px;color:var(--muted);line-height:1.7;margin-top:5px;overflow-wrap:anywhere}
+.entry-score{display:inline-block;margin-top:7px;padding:5px 8px;border-radius:7px;
+background:#eef2ff;color:#536bd8;font-size:9px;font-weight:800}
+.entry-actions{display:flex;flex-direction:column;gap:5px;align-items:flex-end}
+.empty{text-align:center;color:var(--muted);font-size:11px;line-height:1.8;padding:24px 10px}
+.empty span{display:block;font-size:28px;margin-bottom:7px}
+.search-row{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:15px}
+.search-row .search{flex:1;min-width:150px}
+.calendar-card{padding:19px;background:#fff;border:1px solid var(--line);
+border-radius:19px;box-shadow:var(--shadow)}
+.calendar-toolbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:17px}
+.calendar-toolbar h3{margin:0}
+.icon-btn{width:35px;height:35px;border:1px solid var(--line);border-radius:10px;background:#fff}
+.calendar-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px}
+.weekday{text-align:center;font-size:9px;font-weight:800;color:var(--muted);padding:8px 0}
+.calday{position:relative;min-height:58px;border:1px solid transparent;border-radius:10px;
+background:#f8f9fc;color:#4b5870;font-size:11px}
+.calday.outside{background:#fff;color:#c2c9d5}
+.calday.today{border-color:var(--blue);color:var(--blue);font-weight:800}
+.calday.selected{background:var(--blue2);border-color:var(--blue)}
+.calday.has::after{content:"";position:absolute;bottom:5px;left:50%;width:5px;height:5px;
+border-radius:50%;background:var(--green);transform:translateX(-50%)}
+.food-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.food-card{padding:16px;border:1px solid var(--line);border-radius:16px;background:#fff;box-shadow:var(--shadow)}
+.food-top{display:flex;justify-content:space-between;align-items:center}
+.food-emoji{width:44px;height:44px;border-radius:14px;background:#f3f4ff;display:grid;place-items:center;font-size:24px}
+.favorite{width:33px;height:33px;border:1px solid var(--line);border-radius:10px;background:#fff;font-size:17px}
+.favorite.active{color:#e65b76;background:#fff0f3}
+.food-card h3{font-size:12px;margin:14px 0 6px}
+.food-card p{min-height:34px;font-size:10px;color:var(--muted);line-height:1.7}
+.food-use{display:flex;gap:6px}
+.food-use select{min-width:0;flex:1;border:1px solid var(--line);border-radius:9px;padding:7px;font-size:10px}
+.reminder-row{display:flex;align-items:center;gap:10px;padding:13px;border:1px solid var(--line);border-radius:13px;margin-bottom:9px}
+.reminder-symbol{width:39px;height:39px;display:grid;place-items:center;background:#f1f3ff;border-radius:12px;font-size:20px}
+.reminder-info{flex:1;min-width:0}
+.reminder-info strong{font-size:11px;display:block}
+.reminder-info small{font-size:9px;color:var(--muted);display:block;margin-top:4px}
+.reminder-time{font-size:12px;font-weight:800}
+.switch{width:37px;height:21px;position:relative;flex-shrink:0}
+.switch input{opacity:0;width:0;height:0}
+.switch span{position:absolute;inset:0;background:#dce1eb;border-radius:99px;cursor:pointer}
+.switch span:before{content:"";position:absolute;width:15px;height:15px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.2s}
+.switch input:checked+span{background:var(--blue)}
+.switch input:checked+span:before{transform:translateX(16px)}
+.reminder-form{display:grid;grid-template-columns:1fr 1fr auto;gap:9px;align-items:end}
+.reminder-form .field{margin:0}
+.founder-cover{position:relative;overflow:hidden;min-height:210px;border-radius:20px;
+background:linear-gradient(120deg,#263a70,#6278ef);color:white;padding:27px;
+display:flex;align-items:flex-end}
+.founder-cover:after{content:"✳";position:absolute;right:8%;top:-30px;font-size:180px;color:#ffffff12}
+.founder-cover h2{font-size:clamp(25px,4vw,38px);margin:8px 0}
+.founder-cover p{max-width:560px;color:#e0e6ff;font-size:12px;margin-bottom:0}
+.founder-layout{display:grid;grid-template-columns:minmax(240px,.75fr) minmax(0,1.25fr);gap:17px;margin-top:17px}
+.founder-photo-wrap{display:grid;place-items:center}
+.founder-photo{width:min(100%,340px);aspect-ratio:4/5;border-radius:22px;overflow:hidden;
+background:linear-gradient(145deg,#e7ecff,#dff8ed);display:grid;place-items:center;
+color:#5168dc;text-align:center;padding:20px}
+.founder-photo img{width:100%;height:100%;object-fit:cover}
+.photo-placeholder .symbol{font-size:56px;display:block}
+.photo-placeholder strong{display:block;margin:12px 0 5px;font-size:14px}
+.photo-placeholder p{font-size:10px;color:#687b92;line-height:1.7}
+.owner-title{font-size:10px;color:var(--blue);letter-spacing:1.4px;font-weight:800}
+.owner-name{font-size:25px;font-weight:850;margin:9px 0}
+.founder-copy{font-size:12px;line-height:1.9;color:#637089}
+.mini-stat{padding:14px;border:1px solid var(--line);border-radius:13px;background:#fafbff}
+.mini-stat strong{font-size:12px;display:block;margin-bottom:5px}
+.mini-stat p{font-size:10px;color:var(--muted);margin:0;line-height:1.8}
+.profile-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-top:15px}
+.footer-note{text-align:center;color:#9aa4b5;font-size:10px;line-height:1.8;margin-top:25px}
+.mobile-nav{display:none}
+
+@media(max-width:1120px){
+.sidebar{width:210px}.main{margin-left:210px;padding:23px}
+.stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+.content-grid{grid-template-columns:1fr}.food-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:720px){
+.login-screen{grid-template-columns:1fr}
+.login-art{min-height:250px;padding:22px}
+.login-message{margin-top:34px}
+.login-message h1{font-size:35px}
+.login-message p{font-size:11px}
+.login-points{display:none}
+.login-foot{margin-top:25px}
+.login-side{padding:27px 20px 40px}
+.sidebar{display:none}
+.main{margin-left:0;padding:18px 14px 95px}
+.topbar{align-items:flex-start;margin-bottom:20px}
+.top-sub{max-width:270px}
+.date-chip{display:none}
+.top-actions .btn{padding:10px;font-size:10px}
+.hero{grid-template-columns:1fr 66px;padding:21px 17px}
+.hero h2{font-size:23px}
+.hero p{font-size:11px}
+.hero-orb{width:64px;height:64px;font-size:30px}
+.stats{gap:9px}
+.stat{padding:13px;border-radius:15px}
+.stat-number{font-size:24px}
+.stat-head{font-size:9px}
+.stat-icon{width:28px;height:28px}
+.content-grid,.form-layout,.founder-layout{grid-template-columns:1fr;gap:13px}
+.panel,.form-card{padding:16px;border-radius:17px}
+.section-heading{align-items:flex-start;flex-direction:column}
+.section-heading h2{font-size:22px}
+.food-grid{grid-template-columns:1fr 1fr;gap:9px}
+.food-card{padding:12px}
+.food-use{flex-direction:column}
+.food-use .btn{width:100%}
+.scale{gap:4px}
+.scale label span{min-height:65px;font-size:19px}
+.scale small{font-size:7px}
+.field-grid{gap:9px}
+.calendar-card{padding:12px}
+.calendar-grid{gap:3px}
+.calday{min-height:45px}
+.reminder-form{grid-template-columns:1fr 1fr}
+.reminder-form .btn{grid-column:1/-1;width:100%}
+.entry{gap:8px;padding:11px}
+.entry-emoji{width:33px;height:33px;font-size:17px}
+.entry-actions .btn{padding:7px}
+.founder-photo{max-width:250px}
+.mobile-nav{position:fixed;inset:auto 0 0;z-index:30;display:flex;justify-content:space-around;
+gap:2px;padding:7px 4px calc(7px + env(safe-area-inset-bottom));
+border-top:1px solid #e9edf5;background:#fffffff0;backdrop-filter:blur(14px)}
+.mobile-nav .nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;
+justify-content:center;gap:4px;padding:7px 1px;font-size:9px;color:#8590a4}
+.mobile-nav .nav-btn.active{color:#5369e5;background:#eef1ff;box-shadow:none}
+.mobile-nav .nav-icon{font-size:18px;width:auto}
+.toast{right:12px;bottom:80px}
+}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+</style>
+  <link rel="stylesheet" href="static/mamora-premium.css">
+</head>
+<body>
+
+<!-- MAIN APP -->
+<div id="appShell">
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-mark">✿</div>
+      <div><div class="brand-name">MAMORA</div><div class="brand-sub">APPETITE & WELLNESS</div></div>
+    </div>
+    <div class="nav-label">Workspace</div>
+    <nav class="nav-list">
+      <button class="nav-btn active" data-view="home"><span class="nav-icon">⌂</span>Beranda</button>
+      <button class="nav-btn" data-view="checkin"><span class="nav-icon">✚</span>Check-in</button>
+      <button class="nav-btn" data-view="analytics"><span class="nav-icon">▥</span>Grafik & analisis</button>
+      <button class="nav-btn" data-view="history"><span class="nav-icon">◷</span>Riwayat</button>
+      <button class="nav-btn" data-view="calendar"><span class="nav-icon">▦</span>Kalender</button>
+      <button class="nav-btn" data-view="favorites"><span class="nav-icon">♡</span>Favorit makanan</button>
+      <button class="nav-btn" data-view="reminders"><span class="nav-icon">⏰</span>Pengingat</button>
+      <button class="nav-btn" data-view="founder"><span class="nav-icon">✦</span>Founder</button>
+    </nav>
+    <div class="sidebar-bottom">
+      <div class="sidebar-owner"><div class="owner-mini" id="sideOwnerMini">✿</div><div><strong>Pemilik MAMORA</strong><small>Founder profile</small></div></div>
+      <div class="privacy"><strong>🔒 Penyimpanan lokal</strong><p>Catatan demo tersimpan di browser ini. Tidak otomatis tersinkron ke perangkat lain.</p></div>
+      
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div><div class="eyebrow">PERSONAL WELLNESS SPACE</div><h1 id="pageTitle">Selamat datang ✨</h1><p class="top-sub" id="pageSubtitle">Kenali pola makanmu, satu langkah kecil setiap hari.</p></div>
+      <div class="top-actions"><div class="date-chip" id="todayChip">📅 —</div><div class="avatar" id="topAvatar">M</div></div>
+    </header>
+
+    <!-- HOME -->
+    <section class="view active" id="view-home">
+      <div class="hero">
+        <div><span class="tag" style="background:#ffffff1c;color:#fff">✦ DAILY WELLNESS CHECK</span>
+          <h2>Mulai dari mengenali<br>kebutuhan dirimu.</h2>
+          <p>Catat nafsu makan dan kebiasaanmu. Tidak harus sempurna—yang penting memahami pola dirimu.</p>
+          <button class="btn" data-go="checkin">+ Buat check-in hari ini</button>
+        </div><div class="hero-orb">🌱</div>
+      </div>
+      <div class="stats">
+        <article class="stat"><div class="stat-head">Total check-in <span class="stat-icon">✍️</span></div><div class="stat-number" id="statTotal">0</div><div class="stat-foot">Catatan tersimpan</div></article>
+        <article class="stat"><div class="stat-head">Rata-rata skor <span class="stat-icon">🌿</span></div><div class="stat-number" id="statAvg">—</div><div class="stat-foot">Skala nafsu makan 1–5</div></article>
+        <article class="stat"><div class="stat-head">Bulan ini <span class="stat-icon">📆</span></div><div class="stat-number" id="statMonth">0</div><div class="stat-foot">Check-in bulan berjalan</div></article>
+        <article class="stat"><div class="stat-head">Favorit <span class="stat-icon">♡</span></div><div class="stat-number" id="statFav">0</div><div class="stat-foot">Makanan favoritmu</div></article>
+      </div>
+      <div class="content-grid">
+        <div>
+          <section class="panel">
+            <div class="panel-head"><div><h3 class="panel-title">Tren nafsu makan</h3><p class="panel-sub">Rata-rata skor per tanggal.</p></div><div class="period"><button class="active" data-period="7">7 hari</button><button data-period="30">30 hari</button></div></div>
+            <svg id="homeChart" class="chart" viewBox="0 0 600 230" role="img" aria-label="Grafik nafsu makan"></svg>
+            <p class="chart-note" id="homeChartNote">Grafik akan terisi setelah check-in.</p>
+          </section>
+          <section class="panel"><div class="panel-head"><div><h3 class="panel-title">Aktivitas terbaru</h3><p class="panel-sub">Catatan terakhir.</p></div><button class="btn soft small" data-go="history">Lihat semua →</button></div><div class="entry-list" id="recentEntries"></div></section>
+        </div>
+        <div>
+          <section class="panel"><h3 class="panel-title">Akses cepat</h3><p class="panel-sub" style="margin-bottom:14px">Fitur MAMORA.</p><div class="quick-grid">
+            <button class="quick" data-go="checkin"><span>📝</span><strong>Check-in</strong><small>Catat kondisimu</small></button>
+            <button class="quick" data-go="calendar"><span>🗓️</span><strong>Kalender</strong><small>Lihat aktivitas</small></button>
+            <button class="quick" data-go="favorites"><span>🍓</span><strong>Favorit</strong><small>Ide makanan</small></button>
+            <button class="quick" data-go="reminders"><span>⏰</span><strong>Pengingat</strong><small>Atur jadwal</small></button>
+          </div></section>
+          <section class="panel"><h3 class="panel-title">Refleksi terbaru</h3><p class="panel-sub" style="margin-bottom:13px">Berdasarkan check-in terakhir.</p><div id="homeFeedback" class="feedback"><strong>🌱 Mulai dari langkah kecil</strong><p>Buat check-in untuk melihat refleksi pribadimu.</p></div></section>
+        </div>
+      </div>
+    </section>
+
+    <!-- CHECK-IN -->
+    <section class="view" id="view-checkin">
+      <div class="section-heading"><div><div class="eyebrow">DAILY JOURNAL</div><h2>Check-in harian</h2><p>Isi sesuai keadaanmu. Tidak ada jawaban benar atau salah.</p></div></div>
+      <div class="form-layout">
+        <form class="form-card" id="checkinForm">
+          <h3>Bagaimana keadaanmu?</h3><p class="form-hint">Kolom bertanda wajib harus diisi.</p>
+          <div class="field-grid">
+            <div class="field"><label for="entryDate">Tanggal</label><input id="entryDate" name="date" type="date" required></div>
+            <div class="field"><label for="meal">Waktu makan</label><select id="meal" name="meal" required><option value="">Pilih</option><option>Sarapan</option><option>Makan siang</option><option>Makan malam</option><option>Camilan</option><option>Lainnya</option></select></div>
+          </div>
+          <div class="field"><span class="field-label">Seberapa besar nafsu makanmu?</span><div class="scale">
+            <label><input type="radio" name="appetite" value="1" required><span>😣<small>Sangat rendah</small></span></label>
+            <label><input type="radio" name="appetite" value="2"><span>😕<small>Rendah</small></span></label>
+            <label><input type="radio" name="appetite" value="3"><span>😐<small>Biasa</small></span></label>
+            <label><input type="radio" name="appetite" value="4"><span>🙂<small>Baik</small></span></label>
+            <label><input type="radio" name="appetite" value="5"><span>😋<small>Sangat baik</small></span></label>
+          </div></div>
+          <div class="field-grid">
+            <div class="field"><label for="mood">Suasana hati</label><select id="mood" name="mood" required><option value="">Pilih</option><option>Senang</option><option>Tenang</option><option>Biasa saja</option><option>Cemas</option><option>Sedih</option><option>Lelah</option></select></div>
+            <div class="field"><label for="portion">Porsi yang dimakan</label><select id="portion" name="portion" required><option value="">Pilih</option><option>Belum makan</option><option>Sedikit</option><option>Sekitar setengah</option><option>Hampir habis</option><option>Habis</option></select></div>
+          </div>
+          <div class="field"><label for="symptoms">Keluhan (opsional)</label><select id="symptoms" name="symptoms"><option>Tidak ada</option><option>Mual</option><option>Perut kembung</option><option>Sakit perut</option><option>Cepat kenyang</option><option>Lelah</option><option>Lainnya</option></select></div>
+          <div class="field"><label for="foodEaten">Makanan yang dikonsumsi</label><input id="foodEaten" name="food" maxlength="120" placeholder="Contoh: nasi, telur, sup ayam"></div>
+          <div class="field"><label for="notes">Catatan tambahan</label><textarea id="notes" name="notes" maxlength="500" placeholder="Apa yang membuatmu nyaman atau kurang nyaman?"></textarea></div>
+          <button class="btn block" type="submit">Simpan check-in & lihat feedback →</button>
+          <div id="checkinResult" style="margin-top:14px" aria-live="polite"></div>
+        </form>
+        <div>
+          <section class="panel"><h3>🌿 Dengarkan tubuhmu</h3><p class="panel-sub">Perhatikan kapan kamu merasa nyaman makan, makanan apa yang kamu sukai, dan situasi yang mungkin memengaruhi nafsu makan.</p></section>
+          <section class="panel"><h3>💛 Kesehatan tetap utama</h3><p class="panel-sub">Jika nafsu makan terus menurun, kamu sulit makan atau minum, atau keluhan menetap, bicarakan dengan orang tua/wali dan tenaga kesehatan.</p></section>
+        </div>
+      </div>
+    </section>
+
+    <!-- ANALYTICS -->
+    <section class="view" id="view-analytics">
+      <div class="section-heading"><div><div class="eyebrow">YOUR PATTERNS</div><h2>Grafik & analisis</h2><p>Ringkasan catatan, bukan diagnosis medis.</p></div><div class="period"><button class="active" data-period="7">7 hari</button><button data-period="30">30 hari</button></div></div>
+      <section class="panel"><div class="panel-head"><div><h3 class="panel-title">Perjalanan nafsu makan</h3><p class="panel-sub">Rata-rata skor per tanggal.</p></div></div><svg id="analyticsChart" class="chart" viewBox="0 0 600 260" role="img" aria-label="Grafik analisis"></svg><p class="chart-note" id="analyticsNote"></p></section>
+      <div class="stats">
+        <article class="stat"><div class="stat-head">Rata-rata 7 hari</div><div class="stat-number" id="avg7">—</div><div class="stat-foot">Skor dari catatan yang ada</div></article>
+        <article class="stat"><div class="stat-head">Rata-rata 30 hari</div><div class="stat-number" id="avg30">—</div><div class="stat-foot">Skor dari catatan yang ada</div></article>
+        <article class="stat"><div class="stat-head">Hari tercatat</div><div class="stat-number" id="daysRecorded">0</div><div class="stat-foot">Tanggal unik</div></article>
+        <article class="stat"><div class="stat-head">Skor terbaru</div><div class="stat-number" id="latestScore">—</div><div class="stat-foot">Check-in terakhir</div></article>
+      </div>
+    </section>
+
+    <!-- HISTORY -->
+    <section class="view" id="view-history">
+      <div class="section-heading"><div><div class="eyebrow">YOUR JOURNAL</div><h2>Riwayat check-in</h2><p>Temukan kembali catatanmu.</p></div><button class="btn soft" id="exportCsv">↓ Ekspor CSV</button></div>
+      <section class="panel">
+        <div class="search-row"><input class="search" id="historySearch" type="search" placeholder="Cari makanan, suasana hati, catatan..."><input class="search" id="historyDate" type="date" aria-label="Filter tanggal" style="max-width:180px"><button class="btn outline" id="resetFilter">Reset</button></div>
+        <div class="entry-list" id="historyEntries"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:18px;flex-wrap:wrap"><span class="muted small" id="historyCount"></span><button class="btn danger small" id="clearEntries">Hapus semua riwayat</button></div>
+      </section>
+    </section>
+
+    <!-- CALENDAR -->
+    <section class="view" id="view-calendar">
+      <div class="section-heading"><div><div class="eyebrow">YOUR CONSISTENCY</div><h2>Kalender check-in</h2><p>Pilih tanggal untuk melihat catatan.</p></div></div>
+      <section class="calendar-card"><div class="calendar-toolbar"><button class="icon-btn" id="prevMonth" aria-label="Bulan sebelumnya">←</button><h3 id="calendarMonth"></h3><button class="icon-btn" id="nextMonth" aria-label="Bulan berikutnya">→</button></div><div class="calendar-grid" id="calendarGrid"></div><div class="divider"></div><h3 id="calendarSelectedTitle">Catatan tanggal terpilih</h3><div class="entry-list" id="calendarEntries"></div></section>
+    </section>
+
+    <!-- FAVORITES -->
+    <section class="view" id="view-favorites">
+      <div class="section-heading"><div><div class="eyebrow">FOOD IDEAS</div><h2>Favorit makanan</h2><p>Simpan makanan yang kamu sukai atau ingin coba.</p></div></div>
+      <section class="panel"><h3>Tambah makanan sendiri</h3><p class="panel-sub">Ini daftar ide pribadi, bukan rekomendasi medis.</p><form id="customFoodForm" class="search-row" style="margin-top:13px"><input class="search" id="customFoodName" maxlength="70" required placeholder="Nama makanan"><input class="search" id="customFoodEmoji" maxlength="8" placeholder="🍲" aria-label="Emoji" style="max-width:75px"><button class="btn" type="submit">+ Tambah</button></form></section>
+      <div class="food-grid" id="foodGrid"></div>
+    </section>
+
+    <!-- REMINDERS -->
+    <section class="view" id="view-reminders">
+      <div class="section-heading"><div><div class="eyebrow">GENTLE ROUTINE</div><h2>Pengingat waktu makan</h2><p>Atur rutinitas fleksibel sesuai kebutuhanmu.</p></div></div>
+      <div class="form-layout"><section class="form-card"><h3>Jadwal pengingat</h3><p class="panel-sub" style="margin-bottom:15px">Aktif saat halaman MAMORA terbuka.</p><div id="reminderList"></div>
+        <form id="reminderForm" class="reminder-form"><div class="field"><label for="reminderName">Nama pengingat</label><input id="reminderName" maxlength="40" required placeholder="Camilan sore"></div><div class="field"><label for="reminderTime">Waktu</label><input id="reminderTime" type="time" value="15:00" required></div><button class="btn" type="submit">+ Tambah</button></form>
+        <p class="panel-sub" style="margin-top:15px">Pengingat tidak dijamin berbunyi saat browser ditutup.</p><button class="btn outline small" id="notificationPermission" style="margin-top:10px">Aktifkan izin notifikasi</button>
+      </section><div><section class="panel"><h3>⏰ Cara kerja</h3><p class="panel-sub">MAMORA memeriksa jadwal selama halaman tetap terbuka. Ini bukan alarm background yang dijamin bekerja setelah browser ditutup.</p></section><section class="panel"><h3>💛 Tetap fleksibel</h3><p class="panel-sub">Pengingat hanyalah bantuan. Sesuaikan jadwal dengan kebutuhan dan ceritakan kepada orang tepercaya jika kamu membutuhkan dukungan.</p></section></div></div>
+    </section>
+
+    <!-- FOUNDER -->
+    <section class="view" id="view-founder">
+      <div class="founder-cover"><div style="position:relative;z-index:1"><span class="tag" style="background:#ffffff1c;color:white">THE STORY BEHIND MAMORA</span><h2>Berawal dari kepedulian,<br>dibangun untuk memahami.</h2><p>MAMORA dibuat sebagai proyek edukasi untuk membantu pengguna mencatat pola nafsu makan dan melakukan refleksi harian secara sederhana.</p></div></div>
+      <div class="founder-layout">
+        <section class="card founder-photo-wrap">
+          <div class="founder-photo" id="founderPhoto"><div class="photo-placeholder"><span class="symbol">✿</span><strong>Foto Founder</strong><p>Unggah fotomu sendiri di bagian pengaturan profil di samping.</p></div></div>
+          <div style="width:100%;margin-top:15px"><label class="btn soft block" for="founderPhotoInput">↑ Unggah foto pemilik</label><input class="hidden" type="file" id="founderPhotoInput" accept="image/*"><p class="form-hint">Foto diproses dan disimpan di browser ini. Gunakan foto yang kamu nyaman tampilkan.</p><button class="btn outline block" id="removeFounderPhoto" type="button">Hapus foto</button></div>
+        </section>
+        <div>
+          <section class="card">
+            <div class="owner-title">FOUNDER & PROJECT OWNER</div>
+            <div class="owner-name">Pemilik MAMORA</div>
+            <span class="tag">Student Project · Wellness Technology</span>
+            <p class="founder-copy">MAMORA dirancang sebagai ruang pencatatan sederhana untuk membantu pengguna mengamati perubahan nafsu makan, suasana hati, dan pengalaman makan dari hari ke hari. Ide utamanya adalah menjadikan pencatatan lebih teratur dan mudah dipahami tanpa mengklaim mampu mendiagnosis penyakit.</p>
+            <div class="divider"></div>
+            <h3>Cerita pembuatan</h3>
+            <p class="founder-copy">Proyek ini dikembangkan dari ketertarikan terhadap hubungan antara kebiasaan sehari-hari dan kesehatan pencernaan. MAMORA menggabungkan check-in, visualisasi data, riwayat, kalender, dan pengingat dalam satu antarmuka yang responsif.</p>
+            <h3>Tujuan proyek</h3>
+            <p class="founder-copy">Membantu pengguna mengenali pola pribadi, mendukung kebiasaan refleksi yang konsisten, dan menyediakan bahan pengamatan untuk diskusi dengan orang tua/wali atau tenaga kesehatan jika diperlukan.</p>
+            <p class="form-hint">Deskripsi ini adalah draf profil proyek. Kamu dapat menyesuaikannya agar benar-benar mencerminkan alasan dan proses pembuatanmu.</p>
+          </section>
+          <div class="profile-grid">
+            <div class="mini-stat"><strong>01 · Awareness</strong><p>Mengenali pola nafsu makan melalui catatan harian.</p></div>
+            <div class="mini-stat"><strong>02 · Reflection</strong><p>Merefleksikan pengalaman tanpa menghakimi diri.</p></div>
+            <div class="mini-stat"><strong>03 · Visualization</strong><p>Melihat catatan dalam grafik dan kalender.</p></div>
+            <div class="mini-stat"><strong>04 · Privacy</strong><p>Demo menyimpan data di browser lokal.</p></div>
+          </div>
+          <section class="panel" style="margin-top:17px"><h3>Pengaturan demo</h3><p class="panel-sub">Nama ini hanya digunakan sebagai nama tampilan sesi demo.</p><div class="field" style="margin-top:13px"><label for="displayName">Nama pengguna</label><input id="displayName" maxlength="35" placeholder="Nama pengguna"></div><button class="btn soft" id="saveDisplayName">Simpan nama tampilan</button><div class="divider"></div></section>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer-note">MAMORA · Data tersimpan di browser ini.<br>Bukan alat diagnosis atau pengganti konsultasi tenaga kesehatan.</footer>
+  </main>
+
+  <nav class="mobile-nav" aria-label="Navigasi utama">
+    <button class="nav-btn active" data-view="home"><span class="nav-icon">⌂</span>Beranda</button>
+    <button class="nav-btn" data-view="checkin"><span class="nav-icon">✚</span>Check-in</button>
+    <button class="nav-btn" data-view="analytics"><span class="nav-icon">▥</span>Grafik</button>
+    <button class="nav-btn" data-view="history"><span class="nav-icon">◷</span>Riwayat</button>
+    <button class="nav-btn" data-view="founder"><span class="nav-icon">✦</span>Founder</button>
+  </nav>
+</div>
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+
+<script>
+(() => {
+"use strict";
+
+const KEY = {
+  entries: "mamora_checkins_v4",
+  foods: "mamora_favorites_v4",
+  reminders: "mamora_reminders_v4",
+  photo: "mamora_founder_photo_v1",
+  displayName: "mamora_display_name"
+};
+
+const $ = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+
+function read(key, fallback) {
+  try {
+    const value = JSON.parse(localStorage.getItem(key));
+    return value === null ? fallback : value;
+  } catch {
+    return fallback;
+  }
+}
+
+function write(key, value) {
+  try {
+    localStorage.setItem(key, JSON.stringify(value));
+    return true;
+  } catch {
+    toast("Penyimpanan browser penuh atau tidak tersedia.");
+    return false;
+  }
+}
+
+function dateKey(d = new Date()) {
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+}
+
+function parseDate(key) {
+  const [y,m,d] = String(key).split("-").map(Number);
+  return new Date(y,m-1,d);
+}
+
+function formatDate(key, opts = {day:"numeric",month:"short",year:"numeric"}) {
+  const d = parseDate(key);
+  return Number.isNaN(d.getTime()) ? key :
+    new Intl.DateTimeFormat("id-ID",opts).format(d);
+}
+
+function esc(s) {
+  return String(s ?? "").replace(/[&<>"']/g, c => ({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+  }[c]));
+}
+
+function makeId() {
+  return Date.now() + "-" + Math.random().toString(36).slice(2,8);
+}
+
+function toast(msg) {
+  const el = $("#toast");
+  if (!el) return;
+  el.textContent = msg;
+  el.classList.add("show");
+  clearTimeout(toast.timer);
+  toast.timer = setTimeout(() => el.classList.remove("show"),3000);
+}
+
+function localDateTime(iso) {
+  if (!iso) return "";
+  const d = new Date(iso);
+  return Number.isNaN(d.getTime()) ? "" :
+    new Intl.DateTimeFormat("id-ID",{hour:"2-digit",minute:"2-digit"}).format(d);
+}
+
+let entries = read(KEY.entries,[]);
+let foods = read(KEY.foods,[
+  {id:"f1",name:"Sup ayam",emoji:"🍲",description:"Ide makanan hangat yang bisa disesuaikan.",favorite:true},
+  {id:"f2",name:"Bubur",emoji:"🥣",description:"Tekstur lembut; sesuaikan dengan selera.",favorite:false},
+  {id:"f3",name:"Telur",emoji:"🥚",description:"Sumber protein yang bisa diolah beragam.",favorite:false},
+  {id:"f4",name:"Pisang",emoji:"🍌",description:"Buah praktis untuk ide camilan.",favorite:true},
+  {id:"f5",name:"Roti",emoji:"🍞",description:"Bisa dipadukan dengan isian sesuai selera.",favorite:false},
+  {id:"f6",name:"Yoghurt",emoji:"🥛",description:"Pilihan jika cocok untukmu.",favorite:false}
+]);
+let reminders = read(KEY.reminders,[
+  {id:"r1",name:"Sarapan",time:"07:00",enabled:true},
+  {id:"r2",name:"Makan siang",time:"12:00",enabled:true},
+  {id:"r3",name:"Makan malam",time:"18:00",enabled:false}
+]);
+
+if (!Array.isArray(entries)) entries = [];
+if (!Array.isArray(foods)) foods = [];
+if (!Array.isArray(reminders)) reminders = [];
+
+let currentView = "home";
+let period = 7;
+let calendarCursor = new Date(new Date().getFullYear(),new Date().getMonth(),1);
+let selectedDate = dateKey();
+const notified = new Set();
+
+function saveAll() {
+  return write(KEY.entries,entries) &&
+    write(KEY.foods,foods) &&
+    write(KEY.reminders,reminders);
+}
+
+function updateOwnerPhoto() {
+  const raw = localStorage.getItem(KEY.photo)
+    || "static/WhatsApp%20Image%202026-10-25%20at%2009.37.13.jpeg";
+  const side = $("#sideOwnerMini");
+  const avatar = $("#topAvatar");
+  const photo = $("#founderPhoto");
+
+  if (raw) {
+    if (side) side.innerHTML = `<img alt="Foto pemilik MAMORA" src="${raw}">`;
+    if (avatar) avatar.innerHTML = `<img alt="Foto profil" src="${raw}">`;
+    if (photo) photo.innerHTML = `<img alt="Foto Founder MAMORA" src="${raw}">`;
+  } else {
+    if (side) side.textContent = "✿";
+    if (avatar) avatar.textContent = "M";
+    if (photo) photo.innerHTML =
+      `<div class="photo-placeholder"><span class="symbol">✿</span><strong>Foto Founder</strong><p>Unggah fotomu sendiri di bagian pengaturan profil.</p></div>`;
+  }
+}
+
+function updateDisplayName() {
+  const name = localStorage.getItem(KEY.displayName) || "Pengguna MAMORA";
+  const input = $("#displayName");
+  const avatar = $("#topAvatar");
+
+  if (input) input.value = name;
+  if (avatar) avatar.setAttribute("title",name);
+
+  const ownerName = document.querySelector(".owner-name");
+  if (ownerName) ownerName.textContent = name;
+}
+
+const titles = {
+  home:["Selamat datang di MAMORA ✨","Kenali pola makanmu, satu langkah kecil setiap hari."],
+  checkin:["Check-in harian","Luangkan waktu untuk mengenali keadaanmu."],
+  analytics:["Grafik & analisis","Lihat pola dari catatan yang kamu kumpulkan."],
+  history:["Riwayat check-in","Semua catatanmu, tersusun di satu tempat."],
+  calendar:["Kalender check-in","Lihat aktivitas berdasarkan tanggal."],
+  favorites:["Favorit makanan","Kumpulkan ide makanan yang ingin kamu coba."],
+  reminders:["Pengingat waktu makan","Bangun rutinitas yang fleksibel."],
+  founder:["Founder MAMORA","Cerita, tujuan, dan profil pemilik proyek."]
+};
+
+function go(view) {
+  if (!titles[view]) return;
+  currentView = view;
+
+  $$(".view").forEach(v => v.classList.toggle("active",v.id === "view-"+view));
+  $$(".nav-btn[data-view]").forEach(b => b.classList.toggle("active",b.dataset.view === view));
+
+  $("#pageTitle").textContent = titles[view][0];
+  $("#pageSubtitle").textContent = titles[view][1];
+
+  if (view === "home") renderHome();
+  if (view === "analytics") renderAnalytics();
+  if (view === "history") renderHistory();
+  if (view === "calendar") renderCalendar();
+  if (view === "favorites") renderFoods();
+  if (view === "reminders") renderReminders();
+  if (view === "founder") {
+    updateOwnerPhoto();
+    updateDisplayName();
+  }
+
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+document.addEventListener("click",e => {
+  const nav = e.target.closest("[data-view]");
+  if (nav) { go(nav.dataset.view); return; }
+
+  const goBtn = e.target.closest("[data-go]");
+  if (goBtn) { go(goBtn.dataset.go); return; }
+
+  const p = e.target.closest("[data-period]");
+  if (p) {
+    period = Number(p.dataset.period);
+    updatePeriods();
+    renderChart($("#homeChart"),period,230);
+    renderChart($("#analyticsChart"),period,260);
+    return;
+  }
+
+  const del = e.target.closest("[data-delete-entry]");
+  if (del) { deleteEntry(del.dataset.deleteEntry); return; }
+
+  const cal = e.target.closest("[data-cal-date]");
+  if (cal) {
+    selectedDate = cal.dataset.calDate;
+    const d = parseDate(selectedDate);
+    calendarCursor = new Date(d.getFullYear(),d.getMonth(),1);
+    renderCalendar();
+    return;
+  }
+
+  const fav = e.target.closest("[data-fav]");
+  if (fav) {
+    const f = foods.find(x => x.id === fav.dataset.fav);
+    if (f) {
+      f.favorite = !f.favorite;
+      saveAll();
+      renderFoods();
+      renderStats();
+      toast(f.favorite ? "Ditambahkan ke favorit." : "Dihapus dari favorit.");
+    }
+    return;
+  }
+
+  const use = e.target.closest("[data-use-food]");
+  if (use) {
+    const f = foods.find(x => x.id === use.dataset.useFood);
+    if (f) {
+      $("#foodEaten").value = f.name;
+      const mealSelect = $("#foodMeal-" + CSS.escape(f.id));
+      $("#meal").value = mealSelect?.value || "Lainnya";
+      go("checkin");
+      toast("Makanan dimasukkan ke formulir.");
+    }
+    return;
+  }
+
+  const df = e.target.closest("[data-delete-food]");
+  if (df) {
+    if (confirm("Hapus makanan ini dari daftar?")) {
+      foods = foods.filter(f => f.id !== df.dataset.deleteFood);
+      saveAll();
+      renderFoods();
+    }
+    return;
+  }
+
+  const dr = e.target.closest("[data-delete-reminder]");
+  if (dr) {
+    reminders = reminders.filter(r => r.id !== dr.dataset.deleteReminder);
+    saveAll();
+    renderReminders();
+    toast("Pengingat dihapus.");
+  }
+});
+
+function sorted(list = entries) {
+  return [...list].sort((a,b) =>
+    `${b.date||""}|${b.createdAt||""}`.localeCompare(`${a.date||""}|${a.createdAt||""}`)
+  );
+}
+
+function avg(list) {
+  const nums = list.map(e => Number(e.appetite)).filter(n => n >= 1 && n <= 5);
+  return nums.length ? nums.reduce((a,b) => a+b,0)/nums.length : null;
+}
+
+function lastDays(n) {
+  const end = parseDate(dateKey());
+  const start = new Date(end);
+  start.setDate(start.getDate()-n+1);
+  return entries.filter(e => e.date >= dateKey(start) && e.date <= dateKey(end));
+}
+
+function feedbackFor(e) {
+  const parts = [];
+  let warning = false;
+  const score = Number(e.appetite);
+
+  if (score <= 2) {
+    parts.push("Nafsu makanmu tercatat rendah pada check-in ini. Jika nyaman, kamu bisa mencoba porsi kecil yang lebih mudah diterima dan makan perlahan.");
+    warning = true;
+  } else if (score === 3) {
+    parts.push("Nafsu makanmu tercatat sedang. Perhatikan kapan kamu merasa nyaman dan makanan apa yang cocok dengan seleramu.");
+  } else {
+    parts.push("Kamu mencatat nafsu makan yang cukup baik kali ini. Catatan ini bisa membantu mengenali kebiasaan yang terasa nyaman.");
+  }
+
+  if (["Cemas","Sedih","Lelah"].includes(e.mood)) {
+    parts.push("Kamu juga mencatat suasana hati yang mungkin terasa berat. Beristirahat dan berbicara dengan orang yang kamu percaya bisa membantu.");
+  }
+
+  if (e.symptoms && e.symptoms !== "Tidak ada") {
+    parts.push("Keluhan yang dicatat: "+e.symptoms+". Perhatikan apakah keluhan berulang atau menetap.");
+    warning = true;
+  }
+
+  if (e.portion === "Belum makan") {
+    parts.push("Jika belum sempat makan, pertimbangkan untuk memberi tahu orang tua/wali agar kamu bisa mencari pilihan yang sesuai.");
+  }
+
+  if (score <= 2 || warning) {
+    parts.push("Jika nafsu makan terus rendah atau keluhan menetap, bicarakan dengan orang tua/wali dan tenaga kesehatan.");
+  }
+
+  return {
+    title:warning ? "Perhatikan kebutuhan tubuhmu" : "Refleksi check-in",
+    text:parts.join(" "),
+    warning
+  };
+}
+
+function feedbackHTML(f) {
+  return `<div class="feedback ${f.warning?"warning":""}"><strong>${f.warning?"💛":"🌱"} ${esc(f.title)}</strong><p>${esc(f.text)}</p></div>`;
+}
+
+function entryHTML(e,showDelete = true) {
+  const emoji = {
+    Senang:"😊",Tenang:"😌","Biasa saja":"😐",Cemas:"😟",Sedih:"😔",Lelah:"😴"
+  }[e.mood] || "🌿";
+
+  return `<article class="entry">
+    <div class="entry-emoji">${emoji}</div>
+    <div class="entry-body">
+      <div class="entry-title">${esc(e.meal||"Check-in")} · ${esc(e.food||"Makanan tidak dicatat")}</div>
+      <div class="entry-meta">${esc(formatDate(e.date))}${e.createdAt?" · "+esc(localDateTime(e.createdAt)):""}<br>
+      Suasana hati: ${esc(e.mood||"—")} · Porsi: ${esc(e.portion||"—")}<br>
+      Keluhan: ${esc(e.symptoms||"Tidak dicatat")}${e.notes?"<br>Catatan: "+esc(e.notes):""}</div>
+      <span class="entry-score">Nafsu makan: ${Number(e.appetite)||0}/5</span>
+    </div>
+    ${showDelete?`<div class="entry-actions"><button class="btn danger small" data-delete-entry="${esc(e.id)}">Hapus</button></div>`:""}
+  </article>`;
+}
+
+function renderStats() {
+  $("#statTotal").textContent = entries.length;
+  const a = avg(entries);
+  $("#statAvg").textContent = a === null ? "—" : a.toFixed(1)+"/5";
+  $("#statMonth").textContent = entries.filter(e => e.date && e.date.startsWith(dateKey().slice(0,7))).length;
+  $("#statFav").textContent = foods.filter(f => f.favorite).length;
+
+  const a7 = avg(lastDays(7));
+  const a30 = avg(lastDays(30));
+  $("#avg7").textContent = a7 === null ? "—" : a7.toFixed(1)+"/5";
+  $("#avg30").textContent = a30 === null ? "—" : a30.toFixed(1)+"/5";
+  $("#daysRecorded").textContent = new Set(entries.map(e => e.date)).size;
+
+  const latest = sorted()[0];
+  $("#latestScore").textContent = latest ? latest.appetite+"/5" : "—";
+}
+
+function updatePeriods() {
+  $$("[data-period]").forEach(b =>
+    b.classList.toggle("active",Number(b.dataset.period) === period)
+  );
+}
+
+function renderChart(svg,days,height) {
+  if (!svg) return;
+
+  const W=600,L=37,R=14,T=15,B=32,H=height-T-B,PW=W-L-R;
+  const today=parseDate(dateKey()),data=[];
+
+  for (let i=days-1;i>=0;i--) {
+    const d=new Date(today);
+    d.setDate(d.getDate()-i);
+    const key=dateKey(d);
+    const es=entries.filter(e=>e.date===key);
+    data.push({key,date:d,score:avg(es),count:es.length});
+  }
+
+  const x=i=>L+(data.length<=1?PW/2:i*PW/(data.length-1));
+  const y=s=>T+(5-s)/4*H;
+  let html="";
+
+  for (let s=1;s<=5;s++) {
+    const yy=y(s);
+    html+=`<line x1="${L}" y1="${yy}" x2="${W-R}" y2="${yy}" stroke="#e9edf5" stroke-dasharray="4 5"/>`;
+    html+=`<text x="${L-11}" y="${yy+4}" text-anchor="end" fill="#98a2b3" font-size="11">${s}</text>`;
+  }
+
+  const valid=data.map((d,i)=>({...d,x:x(i),y:d.score===null?null:y(d.score)})).filter(d=>d.score!==null);
+
+  if (valid.length) {
+    const line=valid.map((p,i)=>`${i?"L":"M"} ${p.x} ${p.y}`).join(" ");
+
+    if (valid.length>1) {
+      const area=`M ${valid[0].x} ${T+H} `+
+        valid.map(p=>`L ${p.x} ${p.y}`).join(" ")+
+        ` L ${valid[valid.length-1].x} ${T+H} Z`;
+
+      html+=`<defs><linearGradient id="${svg.id}Fill" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#5877f7" stop-opacity=".18"/>
+        <stop offset="100%" stop-color="#5877f7" stop-opacity="0"/>
+      </linearGradient></defs><path d="${area}" fill="url(#${svg.id}Fill)"/>`;
+    }
+
+    html+=`<path d="${line}" fill="none" stroke="#5877f7" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>`;
+
+    valid.forEach(p=>{
+      html+=`<circle cx="${p.x}" cy="${p.y}" r="5" fill="#5877f7" stroke="#fff" stroke-width="2">
+        <title>${esc(formatDate(p.key))}: ${p.score.toFixed(1)}/5, ${p.count} catatan</title>
+      </circle>`;
+    });
+  } else {
+    html+=`<text x="${W/2}" y="${T+H/2}" text-anchor="middle" fill="#98a2b3" font-size="13">Belum ada catatan pada periode ini</text>`;
+  }
+
+  data.forEach((d,i)=>{
+    if (days===7 || i%5===0 || i===data.length-1) {
+      html+=`<text x="${x(i)}" y="${height-7}" text-anchor="middle" fill="#98a2b3" font-size="10">${d.date.getDate()}</text>`;
+    }
+  });
+
+  svg.innerHTML=html;
+
+  const es=data.filter(d=>d.score!==null).flatMap(d=>entries.filter(e=>e.date===d.key));
+  const text=es.length
+    ? `Ada ${valid.length} hari dengan catatan dalam ${days} hari terakhir. Rata-rata skor check-in: ${avg(es).toFixed(1)}/5. Hari tanpa catatan tidak dihitung sebagai skor nol.`
+    : `Belum ada catatan dalam ${days} hari terakhir. Buat check-in untuk mulai membentuk grafik.`;
+
+  const note=svg.id==="homeChart"?$("#homeChartNote"):$("#analyticsNote");
+  if (note) note.textContent=text;
+}
+
+function renderHome() {
+  renderStats();
+  renderChart($("#homeChart"),period,230);
+
+  const latest=sorted()[0];
+  $("#homeFeedback").innerHTML=latest
+    ? feedbackHTML(feedbackFor(latest))
+    : `<strong>🌱 Mulai dari langkah kecil</strong><p>Buat check-in untuk melihat refleksi pribadimu.</p>`;
+
+  const recent=sorted().slice(0,3);
+  $("#recentEntries").innerHTML=recent.length
+    ? recent.map(e=>entryHTML(e,false)).join("")
+    : `<div class="empty"><span>📝</span>Belum ada catatan.<br>Check-in pertamamu akan muncul di sini.</div>`;
+}
+
+function renderAnalytics() {
+  renderStats();
+  renderChart($("#analyticsChart"),period,260);
+  updatePeriods();
+}
+
+function renderHistory() {
+  const q=$("#historySearch").value.trim().toLowerCase();
+  const date=$("#historyDate").value;
+
+  const list=sorted().filter(e=>
+    (!q||[e.meal,e.food,e.mood,e.portion,e.symptoms,e.notes].join(" ").toLowerCase().includes(q)) &&
+    (!date||e.date===date)
+  );
+
+  $("#historyEntries").innerHTML=list.length
+    ? list.map(e=>entryHTML(e)).join("")
+    : `<div class="empty"><span>🔎</span>${entries.length?"Tidak ada catatan yang cocok.":"Belum ada riwayat check-in."}</div>`;
+
+  $("#historyCount").textContent=`${list.length} dari ${entries.length} catatan`;
+}
+
+function renderCalendar() {
+  const y=calendarCursor.getFullYear(),m=calendarCursor.getMonth();
+  $("#calendarMonth").textContent=new Intl.DateTimeFormat("id-ID",{month:"long",year:"numeric"}).format(calendarCursor);
+
+  const first=new Date(y,m,1);
+  const offset=(first.getDay()+6)%7;
+  const start=new Date(y,m,1-offset);
+  const weekdays=["Sen","Sel","Rab","Kam","Jum","Sab","Min"];
+
+  let html=weekdays.map(d=>`<div class="weekday">${d}</div>`).join("");
+  const has=new Set(entries.map(e=>e.date));
+
+  for (let i=0;i<42;i++) {
+    const d=new Date(start);
+    d.setDate(start.getDate()+i);
+    const k=dateKey(d);
+    html+=`<button class="calday ${d.getMonth()!==m?"outside ":""}${k===dateKey()?"today ":""}${k===selectedDate?"selected ":""}${has.has(k)?"has":""}" data-cal-date="${k}" aria-label="${esc(formatDate(k))}">${d.getDate()}</button>`;
+  }
+
+  $("#calendarGrid").innerHTML=html;
+  $("#calendarSelectedTitle").textContent="Catatan · "+formatDate(selectedDate);
+
+  const list=sorted(entries.filter(e=>e.date===selectedDate));
+  $("#calendarEntries").innerHTML=list.length
+    ? list.map(e=>entryHTML(e)).join("")
+    : `<div class="empty">Belum ada check-in pada tanggal ini.</div>`;
+}
+
+function renderFoods() {
+  $("#foodGrid").innerHTML=foods.length ? foods.map(f=>`
+    <article class="food-card">
+      <div class="food-top">
+        <div class="food-emoji">${esc(f.emoji||"🍽️")}</div>
+        <button class="favorite ${f.favorite?"active":""}" data-fav="${esc(f.id)}" aria-label="Ubah favorit">${f.favorite?"♥":"♡"}</button>
+      </div>
+      <h3>${esc(f.name)}</h3>
+      <p>${esc(f.description||"Ide makanan pilihanmu.")}</p>
+      <div class="food-use">
+        <select id="foodMeal-${esc(f.id)}" aria-label="Waktu makan">
+          <option>Sarapan</option><option>Makan siang</option><option>Makan malam</option><option>Camilan</option>
+        </select>
+        <button class="btn soft small" data-use-food="${esc(f.id)}">Catat</button>
+      </div>
+      ${f.custom?`<button class="btn danger small" style="width:100%;margin-top:8px" data-delete-food="${esc(f.id)}">Hapus</button>`:""}
+    </article>`).join("")
+    : `<div class="empty">Belum ada makanan.</div>`;
+
+  renderStats();
+}
+
+function renderReminders() {
+  $("#reminderList").innerHTML=reminders.length ? reminders.map(r=>`
+    <div class="reminder-row">
+      <div class="reminder-symbol">⏰</div>
+      <div class="reminder-info"><strong>${esc(r.name)}</strong><small>${r.enabled?"Aktif saat halaman terbuka":"Dinonaktifkan"}</small></div>
+      <span class="reminder-time">${esc(r.time)}</span>
+      <label class="switch"><input type="checkbox" data-toggle-reminder="${esc(r.id)}" ${r.enabled?"checked":""} aria-label="Aktifkan pengingat"><span></span></label>
+      <button class="btn danger small" data-delete-reminder="${esc(r.id)}" aria-label="Hapus pengingat">×</button>
+    </div>`).join("")
+    : `<div class="empty">Belum ada pengingat.</div>`;
+}
+
+function renderAll() {
+  renderStats();
+  renderHome();
+  renderAnalytics();
+  renderHistory();
+  renderCalendar();
+  renderFoods();
+  renderReminders();
+  updateOwnerPhoto();
+  updateDisplayName();
+}
+
+function deleteEntry(id) {
+  if (!entries.some(e=>e.id===id)) return;
+  if (!confirm("Hapus catatan ini? Tindakan tidak dapat dibatalkan.")) return;
+  entries=entries.filter(e=>e.id!==id);
+  saveAll();
+  renderAll();
+  toast("Catatan dihapus.");
+}
+
+$("#checkinForm").addEventListener("submit",e=>{
+  e.preventDefault();
+  const fd=new FormData(e.currentTarget);
+  const item={
+    id:makeId(),date:fd.get("date"),meal:fd.get("meal"),
+    appetite:Number(fd.get("appetite")),mood:fd.get("mood"),
+    portion:fd.get("portion"),symptoms:fd.get("symptoms"),
+    food:String(fd.get("food")||"").trim(),
+    notes:String(fd.get("notes")||"").trim(),
+    createdAt:new Date().toISOString()
+  };
+
+  if (!item.date||!item.meal||!item.mood||!item.portion||item.appetite<1||item.appetite>5) {
+    toast("Periksa kolom wajib.");
+    return;
+  }
+
+  entries.push(item);
+  saveAll();
+  $("#checkinResult").innerHTML=feedbackHTML(feedbackFor(item));
+  e.currentTarget.reset();
+  $("#entryDate").value=dateKey();
+  renderAll();
+  $("#checkinResult").scrollIntoView({behavior:"smooth",block:"nearest"});
+  toast("Check-in tersimpan.");
+});
+
+$("#historySearch").addEventListener("input",renderHistory);
+$("#historyDate").addEventListener("change",renderHistory);
+
+$("#resetFilter").addEventListener("click",()=>{
+  $("#historySearch").value="";
+  $("#historyDate").value="";
+  renderHistory();
+});
+
+$("#clearEntries").addEventListener("click",()=>{
+  if (!entries.length) { toast("Riwayat masih kosong."); return; }
+  if (confirm("Hapus SEMUA riwayat check-in? Data tidak bisa dipulihkan.")) {
+    entries=[];
+    saveAll();
+    renderAll();
+    toast("Semua riwayat dihapus.");
+  }
+});
+
+$("#exportCsv").addEventListener("click",()=>{
+  if (!entries.length) { toast("Belum ada data untuk diekspor."); return; }
+
+  const cols=["Tanggal","Waktu makan","Skor","Suasana hati","Porsi","Keluhan","Makanan","Catatan","Waktu pencatatan"];
+  const keys=["date","meal","appetite","mood","portion","symptoms","food","notes","createdAt"];
+  const cell=v=>`"${String(v??"").replace(/"/g,'""')}"`;
+  const csv="\uFEFF"+[cols,...sorted().map(e=>keys.map(k=>e[k]??""))]
+    .map(r=>r.map(cell).join(",")).join("\r\n");
+
+  const url=URL.createObjectURL(new Blob([csv],{type:"text/csv;charset=utf-8"}));
+  const a=document.createElement("a");
+  a.href=url;
+  a.download="mamora-riwayat-"+dateKey()+".csv";
+  a.click();
+  URL.revokeObjectURL(url);
+  toast("Ekspor CSV dimulai.");
+});
+
+$("#prevMonth").addEventListener("click",()=>{
+  calendarCursor=new Date(calendarCursor.getFullYear(),calendarCursor.getMonth()-1,1);
+  renderCalendar();
+});
+
+$("#nextMonth").addEventListener("click",()=>{
+  calendarCursor=new Date(calendarCursor.getFullYear(),calendarCursor.getMonth()+1,1);
+  renderCalendar();
+});
+
+$("#customFoodForm").addEventListener("submit",e=>{
+  e.preventDefault();
+  const name=$("#customFoodName").value.trim();
+  if (!name) return;
+
+  foods.push({
+    id:makeId(),name,
+    emoji:$("#customFoodEmoji").value.trim()||"🍽️",
+    description:"Makanan yang ditambahkan sendiri.",
+    favorite:true,custom:true
+  });
+
+  saveAll();
+  e.currentTarget.reset();
+  renderFoods();
+  toast("Makanan ditambahkan.");
+});
+
+$("#reminderForm").addEventListener("submit",e=>{
+  e.preventDefault();
+  const name=$("#reminderName").value.trim();
+  const time=$("#reminderTime").value;
+  if (!name||!time) return;
+
+  reminders.push({id:makeId(),name,time,enabled:true});
+  saveAll();
+  e.currentTarget.reset();
+  $("#reminderTime").value="15:00";
+  renderReminders();
+  toast("Pengingat ditambahkan.");
+});
+
+$("#reminderList").addEventListener("change",e=>{
+  const id=e.target.dataset.toggleReminder;
+  if (!id) return;
+
+  const r=reminders.find(x=>x.id===id);
+  if (r) {
+    r.enabled=e.target.checked;
+    saveAll();
+    renderReminders();
+    toast(r.enabled?"Pengingat aktif.":"Pengingat dinonaktifkan.");
+  }
+});
+
+$("#notificationPermission").addEventListener("click",async()=>{
+  if (!("Notification" in window)) {
+    toast("Browser ini tidak mendukung notifikasi sistem.");
+    return;
+  }
+  try {
+    const p=await Notification.requestPermission();
+    toast(p==="granted"?"Izin diberikan. Halaman tetap harus terbuka.":"Izin notifikasi belum diberikan.");
+  } catch {
+    toast("Notifikasi tidak tersedia di browser ini.");
+  }
+});
+
+function checkReminders() {
+  const d=new Date();
+  const time=`${String(d.getHours()).padStart(2,"0")}:${String(d.getMinutes()).padStart(2,"0")}`;
+  const today=dateKey();
+
+  reminders.filter(r=>r.enabled&&r.time===time).forEach(r=>{
+    const k=today+"-"+r.id+"-"+time;
+    if (notified.has(k)) return;
+    notified.add(k);
+    toast("⏰ Pengingat: "+r.name+". Sesuaikan dengan kebutuhanmu.");
+
+    if ("Notification" in window && Notification.permission==="granted") {
+      try {
+        new Notification("Pengingat MAMORA",{body:"Waktunya "+r.name+". Sesuaikan dengan kebutuhanmu."});
+      } catch {}
+    }
+  });
+}
+
+$("#saveDisplayName").addEventListener("click",()=>{
+ const name=$("#displayName").value.trim();
+ if(name.length<2){toast("Nama minimal 2 karakter.");return}
+ localStorage.setItem("mamora_display_name",name);
+ updateDisplayName();
+ toast("Nama tampilan disimpan.");
+});
+$("#founderPhotoInput").addEventListener("change",e=>{
+  const file=e.target.files&&e.target.files[0];
+  if (!file) return;
+  if (!file.type.startsWith("image/")) { toast("Pilih file gambar."); return; }
+  if (file.size>8*1024*1024) {
+    toast("Pilih foto dengan ukuran di bawah 8 MB.");
+    e.target.value="";
+    return;
+  }
+
+  const reader=new FileReader();
+  reader.onload=()=>{
+    const img=new Image();
+    img.onload=()=>{
+      const max=1000;
+      const scale=Math.min(1,max/Math.max(img.width,img.height));
+      const canvas=document.createElement("canvas");
+      canvas.width=Math.round(img.width*scale);
+      canvas.height=Math.round(img.height*scale);
+      canvas.getContext("2d").drawImage(img,0,0,canvas.width,canvas.height);
+
+      try {
+        localStorage.setItem(KEY.photo,canvas.toDataURL("image/jpeg",.82));
+        updateOwnerPhoto();
+        toast("Foto Founder disimpan di browser.");
+      } catch {
+        toast("Foto terlalu besar untuk penyimpanan lokal.");
+      }
+    };
+    img.onerror=()=>toast("Foto tidak bisa dibaca.");
+    img.src=reader.result;
+  };
+  reader.readAsDataURL(file);
+});
+
+$("#removeFounderPhoto").addEventListener("click",()=>{
+  localStorage.removeItem(KEY.photo);
+  $("#founderPhotoInput").value="";
+  updateOwnerPhoto();
+  toast("Foto dihapus dari browser.");
+});
+
+$("#todayChip").textContent="📅 "+formatDate(dateKey());
+$("#entryDate").value=dateKey();
+
+setInterval(checkReminders,15000);
+updateOwnerPhoto();
+updateDisplayName();
+renderAll();
+
+})();
+</script>
+</body>
+</html>

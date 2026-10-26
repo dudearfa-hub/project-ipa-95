@@ -614,7 +614,8 @@ function saveAll() {
 }
 
 function updateOwnerPhoto() {
-  const raw = localStorage.getItem(KEY.photo);
+  const raw = localStorage.getItem(KEY.photo)
+    || "static/WhatsApp%20Image%202026-10-25%20at%2009.37.13.jpeg";
   const side = $("#sideOwnerMini");
   const avatar = $("#topAvatar");
   const photo = $("#founderPhoto");
